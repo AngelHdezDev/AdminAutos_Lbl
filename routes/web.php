@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\MarcaController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -18,3 +20,5 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/dashboard', function () {
     return view('dashboard.dashboard'); 
 })->middleware('auth')->name('dashboard.view');
+
+Route::post('/marcas', [MarcaController::class, 'store'])->name('marcas.store');

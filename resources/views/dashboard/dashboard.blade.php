@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,12 +9,16 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    
+
 </head>
+
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-vms">
@@ -28,22 +33,22 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" >
+                        <a class="nav-link active">
                             <i class="bi bi-speedometer2 me-1"></i> Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" >
+                        <a class="nav-link">
                             <i class="bi bi-car-front me-1"></i> Vehículos
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" >
+                        <a class="nav-link">
                             <i class="bi bi-tag me-1"></i> Marcas
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" >
+                        <a class="nav-link">
                             <i class="bi bi-graph-up me-1"></i> Reportes
                         </a>
                     </li>
@@ -70,7 +75,8 @@
             <!-- Header -->
             <div class="dashboard-header">
                 <h1>Centro de Control VMS</h1>
-                <p>Bienvenido de nuevo, {{ Auth::user()->nombre ?? 'Administrador' }}. Aquí está el resumen de tu inventario.</p>
+                <p>Bienvenido de nuevo, {{ Auth::user()->nombre ?? 'Administrador' }}. Aquí está el resumen de tu
+                    inventario.</p>
             </div>
 
             <!-- Stats Grid -->
@@ -124,19 +130,19 @@
             <div class="quick-actions">
                 <h2 class="section-title">Acciones Rápidas</h2>
                 <div class="action-grid">
-                    <a  class="action-btn">
+                    <a class="action-btn">
                         <i class="bi bi-plus-circle-fill"></i>
                         <span>Nuevo Vehículo</span>
                     </a>
-                    <a  class="action-btn">
+                    <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#modalNuevaMarca">
                         <i class="bi bi-tag-fill"></i>
                         <span>Nueva Marca</span>
                     </a>
-                    <a  class="action-btn">
+                    <a class="action-btn">
                         <i class="bi bi-images"></i>
                         <span>Subir Imágenes</span>
                     </a>
-                    <a  class="action-btn">
+                    <a class="action-btn">
                         <i class="bi bi-file-earmark-bar-graph"></i>
                         <span>Ver Reportes</span>
                     </a>
@@ -249,6 +255,107 @@
         </div>
     </div>
 
+    <!-- Modal Nueva Marca -->
+    <div class="modal fade" id="modalNuevaMarca" tabindex="-1" aria-labelledby="modalNuevaMarcaLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalNuevaMarcaLabel">
+                        <i class="bi bi-tag-fill"></i>
+                        Registrar Nueva Marca
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('marcas.store') }}" method="POST" enctype="multipart/form-data"
+                    id="formNuevaMarca">
+                    @csrf
+                    <div class="modal-body">
+                        @if(session('success'))
+                            <div class="alert-success-modal">
+                                <i class="bi bi-check-circle-fill"></i>
+                                {{ session('success') }}
+                            </div>
+                        @endif
+
+                        @if($errors->any())
+                            <div class="alert-danger-modal">
+                                <i class="bi bi-exclamation-triangle-fill"></i>
+                                <div>
+                                    @foreach($errors->all() as $error)
+                                        <div>{{ $error }}</div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+
+                        <!-- Nombre de la Marca -->
+                        <div class="mb-4">
+                            <label for="nombre" class="form-label-modal">
+                                <i class="bi bi-pencil-fill"></i>
+                                Nombre de la Marca
+                            </label>
+                            <input type="text" class="form-control-modal @error('nombre') is-invalid @enderror"
+                                id="nombre" name="nombre" placeholder="Ej: Toyota, Honda, Nissan..."
+                                value="{{ old('nombre') }}" required>
+                            @error('nombre')
+                                <div class="invalid-feedback d-block">
+                                    <i class="bi bi-exclamation-circle"></i> {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <!-- Imagen/Logo -->
+                        <div class="mb-4">
+                            <label class="form-label-modal">
+                                <i class="bi bi-image-fill"></i>
+                                Logo de la Marca
+                            </label>
+                            <div class="file-upload-wrapper">
+                                <input type="file" class="@error('imagen') is-invalid @enderror" id="imagen"
+                                    name="imagen" accept="image/jpeg,image/png,image/jpg" required
+                                    onchange="previewImage(event)">
+                                <div class="file-upload-icon">
+                                    <i class="bi bi-cloud-upload-fill"></i>
+                                </div>
+                                <div class="file-upload-text">
+                                    Haz clic o arrastra una imagen aquí
+                                </div>
+                                <div class="file-upload-hint">
+                                    Formatos: JPG, JPEG, PNG (Máx. 2MB)
+                                </div>
+                            </div>
+                            <div id="imagePreview" style="display: none; text-align: center;">
+                                <img id="preview" class="preview-image" alt="Preview">
+                                <div class="file-name-display">
+                                    <i class="bi bi-file-earmark-image"></i>
+                                    <span id="fileName"></span>
+                                </div>
+                            </div>
+                            @error('imagen')
+                                <div class="invalid-feedback d-block">
+                                    <i class="bi bi-exclamation-circle"></i> {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-modal-secondary" data-bs-dismiss="modal">
+                            <i class="bi bi-x-circle me-2"></i>Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-modal-primary">
+                            <i class="bi bi-check-circle me-2"></i>Guardar Marca
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="laravel-data" data-has-errors="{{ $errors->any() ? 'true' : 'false' }}"
+        data-success="{{ session('success') }}" data-error-msg="{{ $errors->first() }}">
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('js/dashboard-marcas.js') }}"></script>
 </body>
+
 </html>

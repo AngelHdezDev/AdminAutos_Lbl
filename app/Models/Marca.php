@@ -9,7 +9,7 @@ class Marca extends Model
     protected $table = 'marcas';
     protected $primaryKey = 'id_marca';
     
-    public $timestamps = true; 
+    public $timestamps = false;
 
     protected $fillable = ['imagen', 'nombre', 'created_at','created_by'];
 
