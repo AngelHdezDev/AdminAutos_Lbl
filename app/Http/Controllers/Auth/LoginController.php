@@ -9,28 +9,22 @@ use Illuminate\Support\Facades\Auth;
 class LoginController extends Controller
 {
     public function login(Request $request)
-    {
+{
+ 
+    $request->validate([
+        'correo' => 'required|email',
+        'contra' => 'required',
+    ]);
 
-        $credentials = $request->validate([
-            'correo' => ['required', 'email'],
-            'contra' => ['required'],
-        ]);
-
-      
-        $authData = [
-            'correo' => $credentials['correo'],
-            'password' => $credentials['contra'], 
-        ];
-
-        
-        if (Auth::attempt($authData)) {
-            $request->session()->regenerate();
-            return redirect()->intended('dashboard');
-        }
-
-     
-        return back()->withErrors([
-            'correo' => 'Las credenciales no coinciden con nuestros registros.',
-        ]);
+   
+    if (Auth::attempt(['correo' => $request->correo, 'password' => $request->contra])) {
+        $request->session()->regenerate();
+        return redirect()->intended('/dashboard');
     }
+
+    
+    return back()->withErrors([
+        'correo' => 'Las credenciales proporcionadas no son correctas.',
+    ])->withInput($request->only('correo'));
+}
 }
