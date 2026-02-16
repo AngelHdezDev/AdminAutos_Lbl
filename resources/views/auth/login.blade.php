@@ -88,7 +88,7 @@
         </div>
 
         <div class="text-center mt-3">
-            <small class="text-white-50">© 2024 Sistema de Inventario de Autos</small>
+            <small class="text-white-50">© 2026 Sistema de Inventario de Autos</small>
         </div>
     </div>
 

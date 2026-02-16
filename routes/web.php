@@ -15,11 +15,6 @@ Route::post('/login', [LoginController::class, 'login'])->name('login.authentica
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-
-Route::get('/dashboard', function () {
-    return "¡Bienvenido al sistema de inventario!";
-})->middleware('auth')->name('dashboard');
-
 Route::get('/dashboard', function () {
     return view('dashboard.dashboard'); 
-})->name('dashboard.view');
+})->middleware('auth')->name('dashboard.view');
