@@ -130,7 +130,7 @@
             <div class="quick-actions">
                 <h2 class="section-title">Acciones Rápidas</h2>
                 <div class="action-grid">
-                    <a class="action-btn">
+                    <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#modalNuevoVehiculoLabel">
                         <i class="bi bi-plus-circle-fill"></i>
                         <span>Nuevo Vehículo</span>
                     </a>
@@ -255,6 +255,191 @@
         </div>
     </div>
 
+    <!-- Modal Nuevo Vehículo -->
+    <div class="modal fade" id="modalNuevoVehiculo" tabindex="-1" aria-labelledby="modalNuevoVehiculoLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalNuevoVehiculoLabel">
+                        <i class="bi bi-car-front-fill"></i>
+                        Registrar Nuevo Vehículo
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formNuevoVehiculo">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row">
+                            <!-- Columna Izquierda -->
+                            <div class="col-md-6">
+                                <!-- Marca -->
+                                <div class="mb-3">
+                                    <label for="id_marca" class="form-label-modal">
+                                        <i class="bi bi-tag-fill"></i>
+                                        Marca
+                                    </label>
+                                    <select class="form-control-modal" id="id_marca" name="id_marca" required>
+                                        <option value="">Selecciona una marca</option>
+                                        @foreach($marcas ?? [] as $marca)
+                                            <option value="{{ $marca->id }}">{{ $marca->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <!-- Modelo -->
+                                <div class="mb-3">
+                                    <label for="modelo" class="form-label-modal">
+                                        <i class="bi bi-car-front"></i>
+                                        Modelo
+                                    </label>
+                                    <input type="text" class="form-control-modal" id="modelo" name="modelo"
+                                        placeholder="Ej: Corolla, Civic, Sentra..." required>
+                                </div>
+
+                                <!-- Tipo -->
+                                <div class="mb-3">
+                                    <label for="tipo" class="form-label-modal">
+                                        <i class="bi bi-truck"></i>
+                                        Tipo de Vehículo
+                                    </label>
+                                    <select class="form-control-modal" id="tipo" name="tipo" required>
+                                        <option value="">Selecciona el tipo</option>
+                                        <option value="Sedán">Sedán</option>
+                                        <option value="SUV">SUV</option>
+                                        <option value="Pickup">Pickup</option>
+                                        <option value="Hatchback">Hatchback</option>
+                                        <option value="Coupé">Coupé</option>
+                                        <option value="Convertible">Convertible</option>
+                                        <option value="Van">Van</option>
+                                        <option value="Deportivo">Deportivo</option>
+                                    </select>
+                                </div>
+
+                                <!-- Año -->
+                                <div class="mb-3">
+                                    <label for="year" class="form-label-modal">
+                                        <i class="bi bi-calendar-event"></i>
+                                        Año
+                                    </label>
+                                    <input type="number" class="form-control-modal" id="year" name="year"
+                                        placeholder="2024" min="1900" max="{{ date('Y') + 1 }}" required>
+                                </div>
+
+                                <!-- Color -->
+                                <div class="mb-3">
+                                    <label for="color" class="form-label-modal">
+                                        <i class="bi bi-palette-fill"></i>
+                                        Color
+                                    </label>
+                                    <input type="text" class="form-control-modal" id="color" name="color"
+                                        placeholder="Ej: Negro, Blanco, Rojo..." required>
+                                </div>
+
+                                <!-- Transmisión -->
+                                <div class="mb-3">
+                                    <label for="transmision" class="form-label-modal">
+                                        <i class="bi bi-gear-fill"></i>
+                                        Transmisión
+                                    </label>
+                                    <select class="form-control-modal" id="transmision" name="transmision" required>
+                                        <option value="">Selecciona transmisión</option>
+                                        <option value="Manual">Manual</option>
+                                        <option value="Automática">Automática</option>
+                                        <option value="CVT">CVT</option>
+                                        <option value="Dual Clutch">Dual Clutch</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Columna Derecha -->
+                            <div class="col-md-6">
+                                <!-- Combustible -->
+                                <div class="mb-3">
+                                    <label for="combustible" class="form-label-modal">
+                                        <i class="bi bi-fuel-pump-fill"></i>
+                                        Combustible
+                                    </label>
+                                    <select class="form-control-modal" id="combustible" name="combustible" required>
+                                        <option value="">Selecciona combustible</option>
+                                        <option value="Gasolina">Gasolina</option>
+                                        <option value="Diésel">Diésel</option>
+                                        <option value="Eléctrico">Eléctrico</option>
+                                        <option value="Híbrido">Híbrido</option>
+                                        <option value="Híbrido Enchufable">Híbrido Enchufable</option>
+                                    </select>
+                                </div>
+
+                                <!-- Kilometraje -->
+                                <div class="mb-3">
+                                    <label for="kilometraje" class="form-label-modal">
+                                        <i class="bi bi-speedometer"></i>
+                                        Kilometraje
+                                    </label>
+                                    <input type="number" class="form-control-modal" id="kilometraje" name="kilometraje"
+                                        placeholder="50000" min="0" required>
+                                </div>
+
+                                <!-- Ocultar Kilometraje -->
+                                <div class="mb-3">
+                                    <div class="form-check" style="padding-left: 0;">
+                                        <label class="form-label-modal" style="margin-bottom: 0.5rem;">
+                                            <input type="checkbox" class="form-check-input" id="ocultar_kilometraje"
+                                                name="ocultar_kilometraje" value="1" style="margin-right: 0.5rem;">
+                                            <i class="bi bi-eye-slash"></i>
+                                            Ocultar kilometraje en catálogo
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Precio -->
+                                <div class="mb-3">
+                                    <label for="precio" class="form-label-modal">
+                                        <i class="bi bi-currency-dollar"></i>
+                                        Precio de Venta
+                                    </label>
+                                    <input type="number" class="form-control-modal" id="precio" name="precio"
+                                        placeholder="25000" min="0" step="0.01" required>
+                                </div>
+
+                                <!-- Consignación -->
+                                <div class="mb-3">
+                                    <div class="form-check" style="padding-left: 0;">
+                                        <label class="form-label-modal" style="margin-bottom: 0.5rem;">
+                                            <input type="checkbox" class="form-check-input" id="consignacion"
+                                                name="consignacion" value="1" style="margin-right: 0.5rem;">
+                                            <i class="bi bi-bookmark-star"></i>
+                                            Vehículo en consignación
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Descripción -->
+                                <div class="mb-3">
+                                    <label for="descripcion" class="form-label-modal">
+                                        <i class="bi bi-card-text"></i>
+                                        Descripción (Opcional)
+                                    </label>
+                                    <textarea class="form-control-modal" id="descripcion" name="descripcion" rows="3"
+                                        placeholder="Características adicionales del vehículo..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-modal-secondary" data-bs-dismiss="modal">
+                            <i class="bi bi-x-circle me-2"></i>Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-modal-primary">
+                            <i class="bi bi-check-circle me-2"></i>Guardar Vehículo
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Modal Nueva Marca -->
     <div class="modal fade" id="modalNuevaMarca" tabindex="-1" aria-labelledby="modalNuevaMarcaLabel"
         aria-hidden="true">
@@ -355,7 +540,9 @@
         data-success="{{ session('success') }}" data-error-msg="{{ $errors->first() }}">
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ asset('js/dashboard-marcas.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('js/dashboard.js') }}"></script>
+
 </body>
 
 </html>
