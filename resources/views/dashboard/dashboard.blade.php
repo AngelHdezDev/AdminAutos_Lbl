@@ -130,7 +130,7 @@
             <div class="quick-actions">
                 <h2 class="section-title">Acciones Rápidas</h2>
                 <div class="action-grid">
-                    <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#modalNuevoVehiculoLabel">
+                    <a href="#" class="action-btn" data-bs-toggle="modal" data-bs-target="#modalNuevoVehiculo">
                         <i class="bi bi-plus-circle-fill"></i>
                         <span>Nuevo Vehículo</span>
                     </a>
