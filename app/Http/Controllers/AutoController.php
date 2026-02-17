@@ -55,7 +55,7 @@ class AutoController extends Controller
 
     public function index(Request $request)
     {
-        $query = Auto::with('marca');
+        $query = Auto::with('marca') ->active();
 
         if ($request->filled('search')) {
             $search = $request->input('search');
@@ -79,7 +79,7 @@ class AutoController extends Controller
             $query->where('tipo', $request->input('tipo'));
         }
 
-     
+
         if ($request->filled('consignacion')) {
             $query->where('consignacion', $request->input('consignacion'));
         }
@@ -94,5 +94,15 @@ class AutoController extends Controller
         return view('autos.autos', compact('vehiculos', 'marcas', 'tipos'));
     }
 
+    public function destroy($id)
+    {
+        // Buscamos específicamente por tu columna de llave primaria id_auto
+        $auto = Auto::where('id_auto', $id)->firstOrFail();
+
+        // Actualizamos el estado a inactivo
+        $auto->update(['active' => 0]); // O false, dependiendo de tu DB
+
+        return redirect()->route('autos.index')->with('success', 'Vehículo eliminado correctamente');
+    }
 
 }

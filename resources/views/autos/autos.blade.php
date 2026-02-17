@@ -1029,13 +1029,24 @@
                                         <a  class="btn-action" title="Editar">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <form  class="delete-form">
+                                        <form action="{{ route('autos.destroy', $vehiculo->id_auto) }}" method="POST" class="form-eliminar">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="button" class="btn-action delete btn-delete" title="Eliminar">
+                                            <button type="submit" class="btn-action delete btn-delete" title="Eliminar">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </form>
+                                        @if(session('success'))
+                                            <script>
+                                                Swal.fire({
+                                                    icon: 'success',
+                                                    title: '¡Hecho!',
+                                                    text: "{{ session('success') }}",
+                                                    timer: 3000,
+                                                    showConfirmButton: false
+                                                });
+                                            </script>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

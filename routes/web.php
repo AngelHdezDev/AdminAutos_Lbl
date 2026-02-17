@@ -30,3 +30,4 @@ Route::get('/dashboard', [DashboardController::class, 'getMarcas'])->middleware(
 // Solo estas rutas para autos
 Route::get('/autos', [AutoController::class, 'index'])->middleware('auth')->name('autos.index');
 Route::post('/autos', [AutoController::class, 'store'])->middleware('auth')->name('autos.store');
+Route::delete('/autos/{id}', [AutoController::class, 'destroy'])->middleware('auth')->name('autos.destroy');

@@ -12,8 +12,13 @@ class Auto extends Model
     protected $fillable = [
         'id_marca', 'modelo', 'tipo', 'year', 'color', 'kilometraje', 
         'precio', 'transmision', 'combustible', 'created_at', 'created_by', 
-        'descripcion', 'ocultar_kilometraje', 'consignacion'
+        'descripcion', 'ocultar_kilometraje', 'consignacion', 'active'
     ];
+
+    public function scopeActive($query)
+    {
+        return $query->where('active', true);
+    }   
 
     public function marca()
     {

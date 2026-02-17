@@ -12,3 +12,26 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+
+const formularios = document.querySelectorAll('.form-eliminar');
+
+    formularios.forEach(formulario => {
+        formulario.addEventListener('submit', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "El vehículo se marcará como inactivo.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.submit();
+                }
+            });
+        });
+    });
