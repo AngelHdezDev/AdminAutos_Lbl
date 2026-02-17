@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\Auto\StoreAutoRequest;
 use App\Models\Auto;
+use App\Models\Marca;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
@@ -51,4 +52,47 @@ class AutoController extends Controller
                 ->with('error', 'No se pudo guardar el vehículo. Revisa los datos e intenta de nuevo.');
         }
     }
+
+    public function index(Request $request)
+    {
+        $query = Auto::with('marca');
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('modelo', 'LIKE', "%{$search}%")
+                    ->orWhere('color', 'LIKE', "%{$search}%")
+                    ->orWhere('year', 'LIKE', "%{$search}%")
+
+                    ->orWhereHas('marca', function ($q) use ($search) {
+                        $q->where('nombre', 'LIKE', "%{$search}%");
+                    });
+            });
+        }
+
+
+        if ($request->filled('marca')) {
+            $query->where('id_marca', $request->input('marca'));
+        }
+
+        if ($request->filled('tipo')) {
+            $query->where('tipo', $request->input('tipo'));
+        }
+
+     
+        if ($request->filled('consignacion')) {
+            $query->where('consignacion', $request->input('consignacion'));
+        }
+
+        $vehiculos = $query->orderBy('created_at', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
+        $marcas = Marca::orderBy('nombre', 'asc')->get();
+        $tipos = Auto::select('tipo')->distinct()->orderBy('tipo', 'asc')->get();
+
+        return view('autos.autos', compact('vehiculos', 'marcas', 'tipos'));
+    }
+
+
 }

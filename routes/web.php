@@ -25,4 +25,8 @@ Route::get('/dashboard', function () {
 
 Route::post('/marcas', [MarcaController::class, 'store'])->middleware('auth')->name('marcas.store');
 Route::get('/dashboard', [DashboardController::class, 'getMarcas'])->middleware('auth')->name('dashboard');
+
+
+// Solo estas rutas para autos
+Route::get('/autos', [AutoController::class, 'index'])->middleware('auth')->name('autos.index');
 Route::post('/autos', [AutoController::class, 'store'])->middleware('auth')->name('autos.store');
