@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\MarcaController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AutoController;
 
 
 Route::get('/', function () {
@@ -21,4 +23,6 @@ Route::get('/dashboard', function () {
     return view('dashboard.dashboard'); 
 })->middleware('auth')->name('dashboard.view');
 
-Route::post('/marcas', [MarcaController::class, 'store'])->name('marcas.store');
+Route::post('/marcas', [MarcaController::class, 'store'])->middleware('auth')->name('marcas.store');
+Route::get('/dashboard', [DashboardController::class, 'getMarcas'])->middleware('auth')->name('dashboard');
+Route::post('/autos', [AutoController::class, 'store'])->middleware('auth')->name('autos.store');

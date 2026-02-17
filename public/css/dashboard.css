@@ -52,8 +52,15 @@ body::after {
 }
 
 @keyframes float {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(-50px, 50px) scale(1.1); }
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(-50px, 50px) scale(1.1);
+    }
 }
 
 /* Navbar */
@@ -86,11 +93,14 @@ body::after {
 }
 
 @keyframes pulse-glow {
-    0%, 100% { 
+
+    0%,
+    100% {
         filter: drop-shadow(0 0 5px var(--vms-accent));
         transform: scale(1);
     }
-    50% { 
+
+    50% {
         filter: drop-shadow(0 0 15px var(--vms-accent));
         transform: scale(1.05);
     }
@@ -162,6 +172,7 @@ body::after {
         opacity: 0;
         transform: translateY(-30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -203,16 +214,28 @@ body::after {
     animation: fadeInUp 0.6s ease-out backwards;
 }
 
-.stat-card:nth-child(1) { animation-delay: 0.1s; }
-.stat-card:nth-child(2) { animation-delay: 0.2s; }
-.stat-card:nth-child(3) { animation-delay: 0.3s; }
-.stat-card:nth-child(4) { animation-delay: 0.4s; }
+.stat-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.stat-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.stat-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.stat-card:nth-child(4) {
+    animation-delay: 0.4s;
+}
 
 @keyframes fadeInUp {
     from {
         opacity: 0;
         transform: translateY(30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -231,8 +254,15 @@ body::after {
 }
 
 @keyframes shimmer {
-    0%, 100% { transform: translateX(-100%); }
-    50% { transform: translateX(100%); }
+
+    0%,
+    100% {
+        transform: translateX(-100%);
+    }
+
+    50% {
+        transform: translateX(100%);
+    }
 }
 
 .stat-card:hover {
@@ -241,20 +271,23 @@ body::after {
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px var(--card-color-alpha);
 }
 
-.stat-card.accent { 
-    --card-color: var(--vms-accent); 
+.stat-card.accent {
+    --card-color: var(--vms-accent);
     --card-color-alpha: rgba(0, 212, 255, 0.3);
 }
-.stat-card.secondary { 
-    --card-color: var(--vms-secondary); 
+
+.stat-card.secondary {
+    --card-color: var(--vms-secondary);
     --card-color-alpha: rgba(255, 107, 53, 0.3);
 }
-.stat-card.success { 
-    --card-color: var(--vms-success); 
+
+.stat-card.success {
+    --card-color: var(--vms-success);
     --card-color-alpha: rgba(78, 204, 163, 0.3);
 }
-.stat-card.warning { 
-    --card-color: var(--vms-warning); 
+
+.stat-card.warning {
+    --card-color: var(--vms-warning);
     --card-color-alpha: rgba(255, 215, 0, 0.3);
 }
 
@@ -604,6 +637,46 @@ body::after {
 
 .form-label-modal i {
     color: var(--vms-accent);
+}
+
+.form-control-select {
+    background: rgba(30, 32, 47, 0.8);
+    /* Fondo más sólido para legibilidad */
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    padding: 0.8rem 1.2rem;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.95rem;
+    width: 100%;
+    appearance: none;
+    /* Quita la flecha por defecto */
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 16px 12px;
+    cursor: pointer;
+}
+
+
+.form-control-select:focus {
+    outline: none;
+    border-color: var(--vms-primary, #00d2ff);
+    background-color: rgba(40, 45, 65, 0.9);
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
+}
+
+
+.form-control-select option {
+    /* background-color: #1e202f; */
+    color: #000000;
+    padding: 10px;
+}
+
+
+.form-control-select:invalid,
+.form-control-select option[value=""] {
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .form-control-modal {

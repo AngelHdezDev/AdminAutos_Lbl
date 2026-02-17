@@ -29,4 +29,6 @@ class Auto extends Model
     {
         return $this->belongsTo(Usuario::class, 'created_by');
     }
+
+    public $timestamps = false; 
 }

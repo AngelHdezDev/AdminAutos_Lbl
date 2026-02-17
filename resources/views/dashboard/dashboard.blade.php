@@ -267,22 +267,25 @@
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="formNuevoVehiculo">
+                <form action="{{ route('autos.store') }}" method="POST" id="formNuevoVehiculo">
                     @csrf
                     <div class="modal-body">
                         <div class="row">
                             <!-- Columna Izquierda -->
                             <div class="col-md-6">
                                 <!-- Marca -->
+                                <!-- Marca -->
                                 <div class="mb-3">
                                     <label for="id_marca" class="form-label-modal">
                                         <i class="bi bi-tag-fill"></i>
                                         Marca
                                     </label>
-                                    <select class="form-control-modal" id="id_marca" name="id_marca" required>
-                                        <option value="">Selecciona una marca</option>
-                                        @foreach($marcas ?? [] as $marca)
-                                            <option value="{{ $marca->id }}">{{ $marca->nombre }}</option>
+                                    <select class="form-control-select" id="id_marca" name="id_marca" required>
+                                        <option value="" disabled selected hidden>Selecciona una marca</option>
+                                        @foreach($marcas as $marca)
+                                            <option value="{{ $marca->id_marca }}" {{ old('id_marca') == $marca->id_marca ? 'selected' : '' }}>
+                                                {{ $marca->nombre }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -303,7 +306,7 @@
                                         <i class="bi bi-truck"></i>
                                         Tipo de Vehículo
                                     </label>
-                                    <select class="form-control-modal" id="tipo" name="tipo" required>
+                                    <select class="form-control-select" id="tipo" name="tipo" required>
                                         <option value="">Selecciona el tipo</option>
                                         <option value="Sedán">Sedán</option>
                                         <option value="SUV">SUV</option>
@@ -342,7 +345,7 @@
                                         <i class="bi bi-gear-fill"></i>
                                         Transmisión
                                     </label>
-                                    <select class="form-control-modal" id="transmision" name="transmision" required>
+                                    <select class="form-control-select" id="transmision" name="transmision" required>
                                         <option value="">Selecciona transmisión</option>
                                         <option value="Manual">Manual</option>
                                         <option value="Automática">Automática</option>
@@ -360,7 +363,7 @@
                                         <i class="bi bi-fuel-pump-fill"></i>
                                         Combustible
                                     </label>
-                                    <select class="form-control-modal" id="combustible" name="combustible" required>
+                                    <select class="form-control-select" id="combustible" name="combustible" required>
                                         <option value="">Selecciona combustible</option>
                                         <option value="Gasolina">Gasolina</option>
                                         <option value="Diésel">Diésel</option>
