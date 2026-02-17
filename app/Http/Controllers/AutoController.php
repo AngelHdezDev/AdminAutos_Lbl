@@ -55,7 +55,7 @@ class AutoController extends Controller
 
     public function index(Request $request)
     {
-        $query = Auto::with('marca') ->active();
+        $query = Auto::with('marca')->active();
 
         if ($request->filled('search')) {
             $search = $request->input('search');
@@ -103,6 +103,37 @@ class AutoController extends Controller
         $auto->update(['active' => 0]); // O false, dependiendo de tu DB
 
         return redirect()->route('autos.index')->with('success', 'Vehículo eliminado correctamente');
+    }
+
+    public function update(Request $request, $id)
+    {
+        // 1. Validar los datos
+        $request->validate([
+            'id_marca' => 'required|exists:marcas,id_marca',
+            'modelo' => 'required|string|max:255',
+            'year' => 'required|integer|min:1900|max:' . (date('Y') + 1),
+            'tipo' => 'required|string',
+            'precio' => 'required|numeric|min:0',
+            'kilometraje' => 'required|integer|min:0',
+            // Agrega aquí las validaciones para los demás campos...
+        ]);
+
+        // 2. Buscar el registro (usando tu llave primaria personalizada)
+        $vehiculo = Auto::where('id_auto', $id)->firstOrFail();
+
+        // 3. Preparar los datos
+        $data = $request->all();
+
+        // 4. Manejo especial para Checkboxes (si no vienen en el request, son 0)
+        $data['ocultar_kilometraje'] = $request->has('ocultar_kilometraje') ? 1 : 0;
+        $data['consignacion'] = $request->has('consignacion') ? 1 : 0;
+
+        // 5. Actualizar
+        $vehiculo->update($data);
+
+        // 6. Redirigir con mensaje de éxito
+        return redirect()->route('autos.index')
+            ->with('success', 'El vehículo ' . $vehiculo->modelo . ' ha sido actualizado correctamente.');
     }
 
 }
