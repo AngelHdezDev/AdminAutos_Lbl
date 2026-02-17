@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request; 
+use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Models\Marca;
+use App\Http\Requests\Marca\StoreMarcaRequest;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 
 class MarcaController extends Controller
@@ -28,35 +31,31 @@ class MarcaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreMarcaRequest $request)
     {
-        $request->validate([
-            'nombre' => 'required',
-            'imagen' => 'required|image|mimes:jpeg,png,jpg|max:2048' // Validamos que sea foto
-        ]);
+        try {
+            $rutaBaseDatos = null;
+            if ($request->hasFile('imagen')) {
+                $file = $request->file('imagen');
+                $nombreImagen = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('uploads/marcas'), $nombreImagen);
+                $rutaBaseDatos = 'uploads/marcas/' . $nombreImagen;
+            }
 
-        if ($request->hasFile('imagen')) {
-            // 1. Obtenemos el archivo
-            $file = $request->file('imagen');
+            Marca::create([
+                'nombre' => $request->nombre,
+                'imagen' => $rutaBaseDatos,
+                'created_by' => auth()->id()
+            ]);
 
-            // 2. Le damos un nombre único para que no se sobrescriba
-            $nombreImagen = time() . '_' . $file->getClientOriginalName();
+            return back()->with('success', '¡Marca registrada exitosamente!');
 
-            // 3. Movemos el archivo a public/uploads/marcas/
-            $file->move(public_path('uploads/marcas'), $nombreImagen);
-
-            // 4. Esta es la ruta que guardaremos en la DB
-            $rutaBaseDatos = 'uploads/marcas/' . $nombreImagen;
+        } catch (Exception $e) {
+            Log::error("Error al guardar marca: " . $e->getMessage());
+            return back()
+                ->withInput() 
+                ->with('error', 'Ocurrió un error inesperado al guardar la marca. Por favor, intente de nuevo.');
         }
-
-        // 5. Creamos el registro en la base de datos
-        Marca::create([
-            'nombre' => $request->nombre,
-            'imagen' => $rutaBaseDatos,
-            'created_by' => auth()->id()
-        ]);
-
-        return back()->with('success', 'Marca guardada con éxito');
     }
 
     /**
