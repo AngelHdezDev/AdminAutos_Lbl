@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\Auto\StoreAutoRequest;
+use App\Http\Requests\Auto\UpdateAutoRequest;
 use App\Models\Auto;
 use App\Models\Marca;
 use Exception;
@@ -105,29 +106,17 @@ class AutoController extends Controller
         return redirect()->route('autos.index')->with('success', 'Vehículo eliminado correctamente');
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateAutoRequest $request, $id)
     {
-        
-        $request->validate([
-            'id_marca' => 'required|exists:marcas,id_marca',
-            'modelo' => 'required|string|max:255',
-            'year' => 'required|integer|min:1900|max:' . (date('Y') + 1),
-            'tipo' => 'required|string',
-            'precio' => 'required|numeric|min:0',
-            'kilometraje' => 'required|integer|min:0',
-           
-        ]);
-
-        
         $vehiculo = Auto::where('id_auto', $id)->firstOrFail();
 
-        
+
         $data = $request->all();
 
         $data['ocultar_kilometraje'] = $request->has('ocultar_kilometraje') ? 1 : 0;
         $data['consignacion'] = $request->has('consignacion') ? 1 : 0;
 
-        
+
         $vehiculo->update($data);
 
         // 6. Redirigir con mensaje de éxito
