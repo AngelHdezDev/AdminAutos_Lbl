@@ -15,14 +15,21 @@ class MarcaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $marcas = Marca::latest()->paginate(12);
+            $query = Marca::query();
+
+            if ($request->has('search') && $request->search != '') {
+                $query->where('nombre', 'LIKE', '%' . $request->search . '%');
+            }
+
+            $marcas = $query->latest()->paginate(12);
+
             return view('marcas.marcas', compact('marcas'));
         } catch (Exception $e) {
             Log::error("Error al cargar marcas: " . $e->getMessage());
-            return back()->with('error', 'Ocurrió un error inesperado al cargar las marcas. Por favor, intente de nuevo.');
+            return back()->with('error', 'Error al cargar las marcas.');
         }
     }
 
@@ -59,7 +66,7 @@ class MarcaController extends Controller
         } catch (Exception $e) {
             Log::error("Error al guardar marca: " . $e->getMessage());
             return back()
-                ->withInput() 
+                ->withInput()
                 ->with('error', 'Ocurrió un error inesperado al guardar la marca. Por favor, intente de nuevo.');
         }
     }

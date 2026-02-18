@@ -27,19 +27,22 @@
     </div>
 
     <!-- ── FILTERS BAR ── -->
-    <div class="filters-bar">
-        <div class="container-fluid px-4">
-            <div class="filters-inner">
-                <div class="search-box">
-                    <i class="bi bi-search"></i>
-                    <input type="text" class="search-input" placeholder="Buscar marca..." id="searchInput">
+    <form action="{{ route('marcas.index') }}" method="GET" class="search-box">
+        <div class="filters-bar">
+            <div class="container-fluid px-4">
+                <div class="filters-inner">
+                    <div class="search-box">
+                        <i class="bi bi-search"></i>
+                        <input type="text" name="search" class="search-input" placeholder="Buscar marca..."
+                            value="{{ request('search') }}">
+                    </div>
+                    <span class="filters-count">
+                        Mostrando <span id="countVisible">{{ count($marcas ?? []) }}</span> marcas
+                    </span>
                 </div>
-                <span class="filters-count">
-                    Mostrando <span id="countVisible">{{ count($marcas ?? []) }}</span> marcas
-                </span>
             </div>
         </div>
-    </div>
+    </form>
 
     <!-- ── MAIN CONTENT ── -->
     <div class="main-wrapper">
@@ -96,7 +99,7 @@
                                 </div>
                             @endif
                             <div class="d-flex justify-content-center">
-                                {{ $marcas->links('pagination::bootstrap-4') }}
+                                {{ $marcas->appends(['search' => request('search')])->links('pagination::bootstrap-4') }}
                             </div>
                         </div>
                     </div>
@@ -118,8 +121,8 @@
     </div>
 
     <!-- ══════════════════════════════════
-                     MODAL — NUEVA MARCA
-                ══════════════════════════════════ -->
+                                 MODAL — NUEVA MARCA
+                            ══════════════════════════════════ -->
     <div class="modal fade" id="modalNuevaMarca" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">

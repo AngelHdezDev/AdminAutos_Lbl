@@ -1,14 +1,21 @@
 // marcas.js — Vista de Gestión de Marcas
 
 document.addEventListener('DOMContentLoaded', function () {
+    let timeout = null;
+    document.querySelector('.search-input').addEventListener('keyup', function () {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            this.closest('form').submit();
+        }, 600); // Espera 600ms después de que el usuario deja de escribir
+    });
 
     // ── Notificaciones Laravel → SweetAlert2 ──────────────────────────
     const laravelData = document.getElementById('laravel-data');
 
     if (laravelData) {
-        const hasErrors  = laravelData.dataset.hasErrors === 'true';
-        const success    = laravelData.dataset.success;
-        const errorMsg   = laravelData.dataset.errorMsg;
+        const hasErrors = laravelData.dataset.hasErrors === 'true';
+        const success = laravelData.dataset.success;
+        const errorMsg = laravelData.dataset.errorMsg;
 
         if (success) {
             Swal.fire({
@@ -54,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 background: '#ffffff',
                 color: '#1a1a18',
                 confirmButtonColor: '#c0392b',
-                cancelButtonColor:  '#9d9d96',
+                cancelButtonColor: '#9d9d96',
                 confirmButtonText: 'Sí, eliminar',
                 cancelButtonText: 'Cancelar',
                 reverseButtons: true
@@ -120,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Botón para remover imagen
-        btnRemoveImage?.addEventListener('click', function(e) {
+        btnRemoveImage?.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
             removeImage();
@@ -167,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Mostrar preview
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 // Mostrar imagen grande en la zona de upload
                 uploadPreviewImage.src = e.target.result;
                 uploadInitialState.style.display = 'none';
@@ -240,7 +247,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const countEl = document.getElementById('countVisible');
 
     if (searchInput) {
-        searchInput.addEventListener('input', function() {
+        searchInput.addEventListener('input', function () {
             const search = this.value.toLowerCase().trim();
             let visible = 0;
 
@@ -259,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('modalNuevaMarca')?.addEventListener('hidden.bs.modal', () => {
         const form = document.getElementById('formNuevaMarca');
         if (form) form.reset();
-        
+
         // Resetear visualización de imagen
         if (uploadInitialState && uploadPreviewState) {
             uploadInitialState.style.display = 'block';
@@ -269,9 +276,9 @@ document.addEventListener('DOMContentLoaded', function () {
             uploadZone.style.borderColor = '';
             uploadZone.style.background = '';
         }
-        
+
         previewContainer?.classList.remove('active');
-        
+
         document.querySelectorAll('.field-input.is-invalid').forEach(el => {
             el.classList.remove('is-invalid');
         });
