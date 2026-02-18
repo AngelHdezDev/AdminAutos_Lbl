@@ -27,8 +27,13 @@ Route::post('/marcas', [MarcaController::class, 'store'])->middleware('auth')->n
 Route::get('/dashboard', [DashboardController::class, 'getMarcas'])->middleware('auth')->name('dashboard');
 
 
-// Solo estas rutas para autos
+//rutas para autos
 Route::get('/autos', [AutoController::class, 'index'])->middleware('auth')->name('autos.index');
 Route::post('/autos', [AutoController::class, 'store'])->middleware('auth')->name('autos.store');
 Route::delete('/autos/{id}', [AutoController::class, 'destroy'])->middleware('auth')->name('autos.destroy');
 Route::put('/autos/{id}', [AutoController::class, 'update'])->middleware('auth')->name('autos.update');
+
+
+// Ruta para marcas
+Route::get('/marcas', [MarcaController::class, 'index'])->middleware('auth')->name('marcas.index');
+Route::post('/marcas', [MarcaController::class, 'store'])->middleware('auth')->name('marcas.store');

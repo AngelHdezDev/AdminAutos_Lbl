@@ -17,7 +17,13 @@ class MarcaController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $marcas = Marca::all();
+            return view('marcas.marcas', compact('marcas'));
+        } catch (Exception $e) {
+            Log::error("Error al cargar marcas: " . $e->getMessage());
+            return back()->with('error', 'Ocurrió un error inesperado al cargar las marcas. Por favor, intente de nuevo.');
+        }
     }
 
     /**

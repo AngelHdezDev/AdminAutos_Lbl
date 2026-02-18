@@ -10,13 +10,21 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto ms-4 gap-1">
                 <li class="nav-item">
-                    <a class="nav-link-vms {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
+                    <a class="nav-link-vms {{ request()->routeIs('dashboard') ? 'active' : '' }}"
+                        href="{{ route('dashboard') }}">
                         <i class="bi bi-speedometer2 me-1"></i>Dashboard
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link-vms {{ request()->routeIs('autos.*') ? 'active' : '' }}" href="{{ route('autos.index') }}">
+                    <a class="nav-link-vms {{ request()->routeIs('autos.*') ? 'active' : '' }}"
+                        href="{{ route('autos.index') }}">
                         <i class="bi bi-car-front me-1"></i>Vehículos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-vms {{ request()->routeIs('marcas.*') ? 'active' : '' }}"
+                        href="{{ route('marcas.index') }}">
+                        <i class="bi bi-tag me-1"></i> Marcas
                     </a>
                 </li>
                 {{-- Agrega los demás links igual --}}
