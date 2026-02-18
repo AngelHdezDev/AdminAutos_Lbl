@@ -18,7 +18,7 @@ class MarcaController extends Controller
     public function index()
     {
         try {
-            $marcas = Marca::all();
+            $marcas = Marca::latest()->paginate(12);
             return view('marcas.marcas', compact('marcas'));
         } catch (Exception $e) {
             Log::error("Error al cargar marcas: " . $e->getMessage());

@@ -69,12 +69,11 @@
                                     </div>
                                 </div>
                                 <div class="marca-actions">
-                                    <a  class="btn-action-marca">
+                                    <a class="btn-action-marca">
                                         <i class="bi bi-pencil"></i>
                                         Editar
                                     </a>
-                                    <form  class="delete-form"
-                                        style="flex: 1;">
+                                    <form class="delete-form" style="flex: 1;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="button" class="btn-action-marca delete btn-delete" style="width: 100%;">
@@ -87,6 +86,21 @@
                         </div>
                     @endforeach
                 </div>
+                @if($marcas->hasPages())
+                    <div class="pagination-wrapper">
+                        <div class="w-100">
+                            @if($marcas->total() > 0)
+                                <div class="pagination-info">
+                                    Mostrando <strong>{{ $marcas->firstItem() }}</strong> a <strong>{{ $marcas->lastItem() }}</strong>
+                                    de <strong>{{ $marcas->total() }}</strong> marcas
+                                </div>
+                            @endif
+                            <div class="d-flex justify-content-center">
+                                {{ $marcas->links('pagination::bootstrap-4') }}
+                            </div>
+                        </div>
+                    </div>
+                @endif
             @else
                 <div class="empty-state">
                     <div class="empty-icon">
@@ -104,8 +118,8 @@
     </div>
 
     <!-- ══════════════════════════════════
-                 MODAL — NUEVA MARCA
-            ══════════════════════════════════ -->
+                     MODAL — NUEVA MARCA
+                ══════════════════════════════════ -->
     <div class="modal fade" id="modalNuevaMarca" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
