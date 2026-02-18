@@ -51,7 +51,7 @@
                         <div class="marca-card" data-nombre="{{ strtolower($marca->nombre) }}">
                             <div class="marca-logo-container">
                                 @if($marca->imagen)
-                                    <img src="{{ asset('public/'.$marca->imagen) }}" alt="{{ $marca->nombre }}">
+                                    <img src="{{ asset($marca->imagen) }}" alt="{{ $marca->nombre }}">
                                 @else
                                     <i class="bi bi-tag-fill marca-logo-placeholder"></i>
                                 @endif
