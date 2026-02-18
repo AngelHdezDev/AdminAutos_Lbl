@@ -1032,7 +1032,7 @@
                                             data-bs-target="#modalNuevoVehiculo" {{-- Corregido: antes decía #modalVehiculo --}}
                                             data-id="{{ $vehiculo->id_auto }}"
                                             data-modelo="{{ $vehiculo->modelo }}"
-                                            data-marca="{{ $vehiculo->id_marca }}"
+                                            data-id_marca="{{ $vehiculo->id_marca }}"
                                             data-tipo="{{ $vehiculo->tipo }}"
                                             data-year="{{ $vehiculo->year }}"
                                             data-color="{{ $vehiculo->color }}"

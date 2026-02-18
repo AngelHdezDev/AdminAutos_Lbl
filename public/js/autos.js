@@ -1,47 +1,56 @@
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // --- 1. CONFIGURACIÓN DEL MODAL (CREAR / EDITAR) ---
     const modalVehiculo = document.getElementById('modalNuevoVehiculo');
     const formVehiculo = document.getElementById('formVehiculo');
 
     if (modalVehiculo) {
         modalVehiculo.addEventListener('show.bs.modal', function(event) {
-            const button = event.relatedTarget; // Botón que abrió el modal
+            const button = event.relatedTarget;
             const autoId = button.getAttribute('data-id');
 
-            // Selectores de la interfaz del modal
             const modalTitle = document.getElementById('modalTitle');
             const methodField = document.getElementById('methodField');
             const btnText = document.getElementById('btnSubmitText');
             const btnIcon = document.getElementById('btnSubmitIcon');
 
             if (autoId) {
-                // MODO EDICIÓN
+                // Modo edición
                 modalTitle.textContent = 'Editar Vehículo';
                 btnText.textContent = 'Guardar Cambios';
                 btnIcon.className = 'bi bi-check-lg';
                 methodField.value = 'PUT';
                 formVehiculo.action = `/autos/${autoId}`;
 
-                // Llenado de campos básicos
-                const fields = [
-                    'id_marca', 'modelo', 'year', 'tipo', 'color', 
-                    'transmision', 'combustible', 'kilometraje', 'precio', 'descripcion'
-                ];
+                // Array de campos que son inputs/textareas normales
+                const textFields = ['modelo', 'year', 'color', 'kilometraje', 'precio', 'descripcion'];
 
-                fields.forEach(field => {
+                // Procesar campos de texto normales
+                textFields.forEach(field => {
                     const input = document.getElementById(field);
                     if (input) {
                         input.value = button.getAttribute(`data-${field}`) || '';
                     }
                 });
 
-                // Checkboxes / Toggles
+                // Procesar selects (campos que usan <select>)
+                const selectFields = ['id_marca', 'tipo', 'transmision', 'combustible'];
+                
+                selectFields.forEach(field => {
+                    const select = document.getElementById(field);
+                    if (select) {
+                        const value = button.getAttribute(`data-${field}`);
+                        if (value) {
+                            select.value = value;
+                            select.dispatchEvent(new Event('change'));
+                        }
+                    }
+                });
+
+                // Checkboxes
                 document.getElementById('ocultar_kilometraje').checked = button.getAttribute('data-ocultar') === '1';
                 document.getElementById('consignacion').checked = button.getAttribute('data-consignacion') === '1';
 
             } else {
-                // MODO CREAR
+                // Modo creación
                 modalTitle.textContent = 'Nuevo Vehículo';
                 btnText.textContent = 'Registrar Vehículo';
                 btnIcon.className = 'bi bi-plus-lg';
@@ -52,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- 2. BÚSQUEDA ---
+    // Resto de tu código (búsqueda, eliminación)...
     const searchInput = document.getElementById('searchInput');
     const filterForm = document.getElementById('filterForm');
     if (searchInput && filterForm) {
@@ -64,7 +73,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- 3. ELIMINACIÓN (SWEETALERT) ---
     document.addEventListener('submit', function(e) {
         if (e.target && e.target.classList.contains('form-eliminar')) {
             e.preventDefault();

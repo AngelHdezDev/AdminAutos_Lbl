@@ -107,7 +107,7 @@ class AutoController extends Controller
 
     public function update(Request $request, $id)
     {
-        // 1. Validar los datos
+        
         $request->validate([
             'id_marca' => 'required|exists:marcas,id_marca',
             'modelo' => 'required|string|max:255',
@@ -115,20 +115,19 @@ class AutoController extends Controller
             'tipo' => 'required|string',
             'precio' => 'required|numeric|min:0',
             'kilometraje' => 'required|integer|min:0',
-            // Agrega aquí las validaciones para los demás campos...
+           
         ]);
 
-        // 2. Buscar el registro (usando tu llave primaria personalizada)
+        
         $vehiculo = Auto::where('id_auto', $id)->firstOrFail();
 
-        // 3. Preparar los datos
+        
         $data = $request->all();
 
-        // 4. Manejo especial para Checkboxes (si no vienen en el request, son 0)
         $data['ocultar_kilometraje'] = $request->has('ocultar_kilometraje') ? 1 : 0;
         $data['consignacion'] = $request->has('consignacion') ? 1 : 0;
 
-        // 5. Actualizar
+        
         $vehiculo->update($data);
 
         // 6. Redirigir con mensaje de éxito
