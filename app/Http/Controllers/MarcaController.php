@@ -90,9 +90,40 @@ class MarcaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $id_marca = $id; // Asegúrate de que el ID se pase correctamente
+        $marca = Marca::findOrFail($id_marca);
+
+        // 1. Validación
+        $request->validate([
+            'nombre' => 'required|string|max:255|unique:marcas,nombre,' . $id . ',id_marca',
+            'imagen' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // nullable porque puede no cambiarla
+        ]);
+
+        // 2. Actualizar nombre
+        $marca->nombre = $request->nombre;
+
+        // 3. Gestionar imagen nueva (si existe)
+        if ($request->hasFile('imagen')) {
+            // Eliminar imagen anterior del servidor si existe
+            if ($marca->imagen && file_exists(public_path($marca->imagen))) {
+                unlink(public_path($marca->imagen));
+            }
+
+            // Subir la nueva
+            $file = $request->file('imagen');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/marcas'), $filename);
+
+            // Guardar la nueva ruta
+            $marca->imagen = 'uploads/marcas/' . $filename;
+        }
+
+        $marca->save();
+
+        return redirect()->route('marcas.index')
+            ->with('success', 'La marca se ha actualizado correctamente.');
     }
 
     /**

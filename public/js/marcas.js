@@ -1,79 +1,5 @@
-// marcas.js — Vista de Gestión de Marcas
-
 document.addEventListener('DOMContentLoaded', function () {
-    let timeout = null;
-    document.querySelector('.search-input').addEventListener('keyup', function () {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-            this.closest('form').submit();
-        }, 600); // Espera 600ms después de que el usuario deja de escribir
-    });
-
-    // ── Notificaciones Laravel → SweetAlert2 ──────────────────────────
-    const laravelData = document.getElementById('laravel-data');
-
-    if (laravelData) {
-        const hasErrors = laravelData.dataset.hasErrors === 'true';
-        const success = laravelData.dataset.success;
-        const errorMsg = laravelData.dataset.errorMsg;
-
-        if (success) {
-            Swal.fire({
-                icon: 'success',
-                title: '¡Marca Registrada!',
-                text: success,
-                background: '#ffffff',
-                color: '#1a1a18',
-                confirmButtonColor: '#2d2d2a',
-                timer: 2500,
-                timerProgressBar: true,
-                showConfirmButton: false
-            });
-        }
-
-        if (hasErrors) {
-            // Reabrir modal si hubo error de validación
-            const modal = new bootstrap.Modal(document.getElementById('modalNuevaMarca'));
-            modal.show();
-
-            if (errorMsg) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Revisa el formulario',
-                    text: errorMsg,
-                    background: '#ffffff',
-                    color: '#1a1a18',
-                    confirmButtonColor: '#2d2d2a'
-                });
-            }
-        }
-    }
-
-    // ── Confirmación antes de eliminar ───────────────────────────────
-    document.querySelectorAll('.btn-delete').forEach(btn => {
-        btn.addEventListener('click', function () {
-            const form = this.closest('.delete-form');
-            Swal.fire({
-                title: '¿Eliminar esta marca?',
-                text: 'También se eliminarán sus asociaciones con vehículos.',
-                icon: 'warning',
-                showCancelButton: true,
-                background: '#ffffff',
-                color: '#1a1a18',
-                confirmButtonColor: '#c0392b',
-                cancelButtonColor: '#9d9d96',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar',
-                reverseButtons: true
-            }).then(result => {
-                if (result.isConfirmed) {
-                    form.submit();
-                }
-            });
-        });
-    });
-
-    // ── Upload de imagen con drag & drop ──────────────────────────────
+    // ── 1. VARIABLES DEL DOM (IDs ÚNICOS) ─────────────────────────────
     const uploadZone = document.getElementById('uploadZone');
     const fileInput = document.getElementById('imagen');
     const previewContainer = document.getElementById('previewContainer');
@@ -84,204 +10,170 @@ document.addEventListener('DOMContentLoaded', function () {
     const uploadPreviewState = document.getElementById('uploadPreviewState');
     const uploadPreviewImage = document.getElementById('uploadPreviewImage');
     const btnRemoveImage = document.getElementById('btnRemoveImage');
+    const formMarca = document.getElementById('formNuevaMarca');
+    const laravelData = document.getElementById('laravel-data');
 
-    if (uploadZone && fileInput) {
-        // Prevenir comportamiento por defecto del navegador
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            uploadZone.addEventListener(eventName, preventDefaults, false);
+    // ── 2. BUSCADOR EN TIEMPO REAL ────────────────────────────────────
+    let timeout = null;
+    const searchInput = document.querySelector('.search-input');
+    if (searchInput) {
+        searchInput.addEventListener('keyup', function () {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                this.closest('form').submit();
+            }, 600);
         });
+    }
 
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
+    // ── 3. LÓGICA DUAL DEL MODAL (CREAR / EDITAR) ──────────────────────
+    const modalElement = document.getElementById('modalNuevaMarca');
+    if (modalElement) {
+        modalElement.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget; // Botón que disparó el modal
+            const tipo = button.getAttribute('data-tipo');
+            const methodInput = document.getElementById('formMethod');
+            const modalTitle = this.querySelector('.modal-title-text');
+            const btnSubmit = this.querySelector('.btn-submit');
+
+            if (tipo === 'editar') {
+                const id = button.getAttribute('data-id');
+                const nombre = button.getAttribute('data-nombre');
+                const imagenUrl = button.getAttribute('data-imagen');
+
+                modalTitle.textContent = 'Editar Marca';
+                btnSubmit.innerHTML = '<i class="bi bi-check-lg"></i> Actualizar Marca';
+                formMarca.action = `/marcas/${id}`;
+                methodInput.value = 'PUT';
+
+                console.log("Editando ID:", id);
+                console.log("Nueva Action del Form:", formMarca.action);
+
+                document.getElementById('nombre').value = nombre;
+                fileInput.required = false; // Al editar, la imagen es opcional
+
+                if (imagenUrl) {
+                    uploadPreviewImage.src = imagenUrl;
+                    uploadInitialState.style.display = 'none';
+                    uploadPreviewState.style.display = 'block';
+                }
+            } else {
+                // Configuración para NUEVA MARCA
+                modalTitle.textContent = 'Nueva Marca';
+                btnSubmit.innerHTML = '<i class="bi bi-check-lg"></i> Guardar Marca';
+                formMarca.action = "/marcas";
+                methodInput.value = 'POST';
+                formMarca.reset();
+                fileInput.required = true;
+                removeImage(); // Limpia previews anteriores
+            }
+        });
+    }
+
+    // ── 4. GESTIÓN DE IMAGEN (UPLOAD & PREVIEW) ───────────────────────
+    function handleFileSelect(file) {
+        if (!file) return;
+
+        // Validar tamaño (2MB)
+        if (file.size > 2 * 1024 * 1024) {
+            Swal.fire({ icon: 'warning', title: 'Archivo muy grande', text: 'Máximo 2MB' });
+            removeImage();
+            return;
         }
 
-        // Resaltar zona al arrastrar
-        ['dragenter', 'dragover'].forEach(eventName => {
-            uploadZone.addEventListener(eventName, () => {
-                uploadZone.classList.add('dragging');
-            }, false);
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            // Preview principal en la zona de carga
+            uploadPreviewImage.src = e.target.result;
+            uploadInitialState.style.display = 'none';
+            uploadPreviewState.style.display = 'block';
+
+            // Info detallada en el contenedor inferior
+            if (previewImage) previewImage.src = e.target.result;
+            if (previewName) previewName.textContent = file.name;
+            if (previewSize) previewSize.textContent = (file.size / 1024).toFixed(2) + ' KB';
+            if (previewContainer) previewContainer.classList.add('active');
+
+            uploadZone.style.borderColor = 'var(--gold)';
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function removeImage() {
+        fileInput.value = '';
+        uploadInitialState.style.display = 'block';
+        uploadPreviewState.style.display = 'none';
+        if (previewContainer) previewContainer.classList.remove('active');
+        uploadPreviewImage.src = '';
+        uploadZone.style.borderColor = '';
+        uploadZone.style.background = '';
+    }
+
+    // Eventos Drag & Drop
+    if (uploadZone) {
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(name => {
+            uploadZone.addEventListener(name, (e) => { e.preventDefault(); e.stopPropagation(); });
         });
 
-        ['dragleave', 'drop'].forEach(eventName => {
-            uploadZone.addEventListener(eventName, () => {
-                uploadZone.classList.remove('dragging');
-            }, false);
+        ['dragenter', 'dragover'].forEach(name => {
+            uploadZone.addEventListener(name, () => uploadZone.classList.add('dragging'));
         });
 
-        // Manejar drop
-        uploadZone.addEventListener('drop', e => {
-            const dt = e.dataTransfer;
-            const files = dt.files;
+        ['dragleave', 'drop'].forEach(name => {
+            uploadZone.addEventListener(name, () => uploadZone.classList.remove('dragging'));
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            const files = e.dataTransfer.files;
             if (files.length > 0) {
                 fileInput.files = files;
                 handleFileSelect(files[0]);
             }
-        }, false);
-
-        // Manejar selección normal
-        fileInput.addEventListener('change', e => {
-            if (e.target.files.length > 0) {
-                handleFileSelect(e.target.files[0]);
-            }
         });
+    }
 
-        // Botón para remover imagen
-        btnRemoveImage?.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            removeImage();
-        });
+    // Evento Input File normal
+    fileInput?.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) handleFileSelect(e.target.files[0]);
+    });
 
-        function removeImage() {
-            fileInput.value = '';
-            uploadInitialState.style.display = 'block';
-            uploadPreviewState.style.display = 'none';
-            previewContainer.classList.remove('active');
-            uploadZone.style.borderColor = '';
-            uploadZone.style.background = '';
+    // Botón remover
+    btnRemoveImage?.addEventListener('click', (e) => {
+        e.preventDefault();
+        removeImage();
+    });
+
+    // ── 5. NOTIFICACIONES Y ELIMINACIÓN ──────────────────────────────
+    if (laravelData) {
+        const success = laravelData.dataset.success;
+        const hasErrors = laravelData.dataset.hasErrors === 'true';
+
+        if (success) {
+            Swal.fire({ icon: 'success', title: '¡Operación Exitosa!', text: success, timer: 2000, showConfirmButton: false });
         }
-
-        function handleFileSelect(file) {
-            // Validar tamaño (2MB)
-            if (file.size > 2 * 1024 * 1024) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Archivo muy grande',
-                    text: 'La imagen no debe superar los 2MB',
-                    background: '#ffffff',
-                    color: '#1a1a18',
-                    confirmButtonColor: '#2d2d2a'
-                });
-                removeImage();
-                return;
-            }
-
-            // Validar tipo
-            const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-            if (!validTypes.includes(file.type)) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Formato no válido',
-                    text: 'Solo se permiten archivos JPG y PNG',
-                    background: '#ffffff',
-                    color: '#1a1a18',
-                    confirmButtonColor: '#2d2d2a'
-                });
-                removeImage();
-                return;
-            }
-
-            // Mostrar preview
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                // Mostrar imagen grande en la zona de upload
-                uploadPreviewImage.src = e.target.result;
-                uploadInitialState.style.display = 'none';
-                uploadPreviewState.style.display = 'block';
-                uploadZone.style.borderColor = 'var(--gold)';
-                uploadZone.style.background = 'var(--white)';
-
-                // Mostrar info del archivo
-                previewImage.src = e.target.result;
-                previewName.textContent = file.name;
-                previewSize.textContent = formatBytes(file.size);
-                previewContainer.classList.add('active');
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function formatBytes(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        if (hasErrors) {
+            const modal = new bootstrap.Modal(document.getElementById('modalNuevaMarca'));
+            modal.show();
         }
     }
 
-    // ── Validación del formulario ─────────────────────────────────────
-    document.getElementById('formNuevaMarca')?.addEventListener('submit', function (e) {
-        const nombre = document.getElementById('nombre');
-        const imagen = document.getElementById('imagen');
-
-        // Validar nombre
-        if (!nombre.value || nombre.value.trim() === '') {
-            e.preventDefault();
-            nombre.classList.add('is-invalid');
-            nombre.focus();
+    document.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', function () {
             Swal.fire({
+                title: '¿Eliminar marca?',
+                text: 'Se perderán las asociaciones con vehículos.',
                 icon: 'warning',
-                title: 'Campo requerido',
-                text: 'Por favor ingresa el nombre de la marca',
-                background: '#ffffff',
-                color: '#1a1a18',
-                confirmButtonColor: '#2d2d2a'
+                showCancelButton: true,
+                confirmButtonColor: '#c0392b',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) this.closest('form').submit();
             });
-            return;
-        }
-
-        // Validar imagen
-        if (!imagen.files || imagen.files.length === 0) {
-            e.preventDefault();
-            Swal.fire({
-                icon: 'warning',
-                title: 'Imagen requerida',
-                text: 'Por favor selecciona el logo de la marca',
-                background: '#ffffff',
-                color: '#1a1a18',
-                confirmButtonColor: '#2d2d2a'
-            });
-            return;
-        }
+        });
     });
 
-    // Limpiar estado inválido al escribir
+    // Quitar estados de error al escribir
     document.querySelectorAll('.field-input').forEach(el => {
         el.addEventListener('input', () => el.classList.remove('is-invalid'));
     });
-
-    // ── Buscador en tiempo real ───────────────────────────────────────
-    const searchInput = document.getElementById('searchInput');
-    const marcasCards = document.querySelectorAll('.marca-card');
-    const countEl = document.getElementById('countVisible');
-
-    if (searchInput) {
-        searchInput.addEventListener('input', function () {
-            const search = this.value.toLowerCase().trim();
-            let visible = 0;
-
-            marcasCards.forEach(card => {
-                const nombre = card.dataset.nombre || '';
-                const match = nombre.includes(search);
-                card.style.display = match ? '' : 'none';
-                if (match) visible++;
-            });
-
-            if (countEl) countEl.textContent = visible;
-        });
-    }
-
-    // ── Limpiar modal al cerrar ───────────────────────────────────────
-    document.getElementById('modalNuevaMarca')?.addEventListener('hidden.bs.modal', () => {
-        const form = document.getElementById('formNuevaMarca');
-        if (form) form.reset();
-
-        // Resetear visualización de imagen
-        if (uploadInitialState && uploadPreviewState) {
-            uploadInitialState.style.display = 'block';
-            uploadPreviewState.style.display = 'none';
-        }
-        if (uploadZone) {
-            uploadZone.style.borderColor = '';
-            uploadZone.style.background = '';
-        }
-
-        previewContainer?.classList.remove('active');
-
-        document.querySelectorAll('.field-input.is-invalid').forEach(el => {
-            el.classList.remove('is-invalid');
-        });
-    });
-
 });

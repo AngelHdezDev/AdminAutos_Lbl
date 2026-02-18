@@ -72,9 +72,11 @@
                                     </div>
                                 </div>
                                 <div class="marca-actions">
-                                    <a class="btn-action-marca">
-                                        <i class="bi bi-pencil"></i>
-                                        Editar
+                                    <a class="btn-action-marca" data-bs-toggle="modal" data-bs-target="#modalNuevaMarca" {{-- <---
+                                        Asegúrate de que coincida --}} data-tipo="editar" data-id="{{ $marca->id_marca }}"
+                                        data-nombre="{{ $marca->nombre }}"
+                                        data-imagen="{{ $marca->imagen ? asset($marca->imagen) : '' }}">
+                                        <i class="bi bi-pencil"></i> Editar
                                     </a>
                                     <form class="delete-form" style="flex: 1;">
                                         @csrf
@@ -121,8 +123,8 @@
     </div>
 
     <!-- ══════════════════════════════════
-                                 MODAL — NUEVA MARCA
-                            ══════════════════════════════════ -->
+                                         MODAL — NUEVA MARCA
+                                    ══════════════════════════════════ -->
     <div class="modal fade" id="modalNuevaMarca" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -148,6 +150,7 @@
                 <!-- Body -->
                 <form action="{{ route('marcas.store') }}" method="POST" enctype="multipart/form-data" id="formNuevaMarca">
                     @csrf
+                    <input type="hidden" name="_method" id="formMethod" value="POST">
                     <div class="modal-body">
 
                         <!-- Nombre de la marca -->
