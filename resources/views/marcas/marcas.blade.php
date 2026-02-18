@@ -78,7 +78,7 @@
                                         data-imagen="{{ $marca->imagen ? asset($marca->imagen) : '' }}">
                                         <i class="bi bi-pencil"></i> Editar
                                     </a>
-                                    <form class="delete-form" style="flex: 1;">
+                                    <form action="{{ route('marcas.destroy', $marca->id_marca) }}" method="POST" class="delete-form" style="flex: 1;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="button" class="btn-action-marca delete btn-delete" style="width: 100%;">

@@ -8,10 +8,15 @@ class Marca extends Model
 {
     protected $table = 'marcas';
     protected $primaryKey = 'id_marca';
-    
+
     public $timestamps = false;
 
-    protected $fillable = ['imagen', 'nombre', 'created_at','created_by'];
+    protected $fillable = ['imagen', 'nombre', 'created_at', 'created_by', 'active'];
+
+    public function scopeActive($query)
+    {
+        return $query->where('active', true);
+    }
 
     public function autos()
     {

@@ -19,7 +19,7 @@ class MarcaController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = Marca::query();
+            $query = Marca::query()->where('active', 1);
 
             if ($request->has('search') && $request->search != '') {
                 $query->where('nombre', 'LIKE', '%' . $request->search . '%');
@@ -94,22 +94,22 @@ class MarcaController extends Controller
     public function update(UpdateMarcaRequest $request, $id)
     {
         $marca = Marca::findOrFail($id);
-       
+
         $marca->nombre = $request->nombre;
 
-        
+
         if ($request->hasFile('imagen')) {
-            
+
             if ($marca->imagen && file_exists(public_path($marca->imagen))) {
                 unlink(public_path($marca->imagen));
             }
 
-    
+
             $file = $request->file('imagen');
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('uploads/marcas'), $filename);
 
-      
+
             $marca->imagen = 'uploads/marcas/' . $filename;
         }
 
@@ -122,8 +122,14 @@ class MarcaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        // Buscamos específicamente por tu columna de llave primaria id_marca
+        $marca = Marca::where('id_marca', $id)->firstOrFail();
+
+        // Actualizamos el estado a inactivo
+        $marca->update(['active' => 0]); // O false, dependiendo de tu DB
+
+        return redirect()->route('marcas.index')->with('success', 'Marca desactivada correctamente');
     }
 }
