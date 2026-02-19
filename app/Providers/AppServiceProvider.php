@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        \App\Models\Marca::observe(\App\Observers\MarcaObserver::class);
         Paginator::useBootstrapFive();
     }
 }
