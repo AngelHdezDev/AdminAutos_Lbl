@@ -15,7 +15,7 @@
                     <p class="page-eyebrow">Catálogo</p>
                     <h1 class="page-title">Marcas</h1>
                     <p class="page-subtitle">
-                       {{ $marcas->total() }} marcas registradas en el sistema
+                        {{ $marcas->total() }} marcas registradas en el sistema
                     </p>
                 </div>
                 <button class="btn-new-marca" data-bs-toggle="modal" data-bs-target="#modalNuevaMarca">
@@ -78,7 +78,8 @@
                                         data-imagen="{{ $marca->imagen ? asset($marca->imagen) : '' }}">
                                         <i class="bi bi-pencil"></i> Editar
                                     </a>
-                                    <form action="{{ route('marcas.destroy', $marca->id_marca) }}" method="POST" class="delete-form" style="flex: 1;">
+                                    <form action="{{ route('marcas.destroy', $marca->id_marca) }}" method="POST" class="delete-form"
+                                        style="flex: 1;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="button" class="btn-action-marca delete btn-delete" style="width: 100%;">
@@ -123,8 +124,8 @@
     </div>
 
     <!-- ══════════════════════════════════
-                                         MODAL — NUEVA MARCA
-                                    ══════════════════════════════════ -->
+                                             MODAL — NUEVA MARCA
+                                        ══════════════════════════════════ -->
     <div class="modal fade" id="modalNuevaMarca" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -227,8 +228,9 @@
     </div>
 
     <!-- DATA PARA JS -->
-    <div id="laravel-data" data-has-errors="{{ $errors->any() ? 'true' : 'false' }}" data-success="{{ session('success') }}"
-        data-error-msg="{{ $errors->first() }}">
+    <div id="laravel-data" data-success="{{ session('success') }}" data-error="{{ session('error') }}"
+        data-validation-error="{{ $errors->first() }}" 
+        data-has-errors="{{ $errors->any() ? 'true' : 'false' }}">
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

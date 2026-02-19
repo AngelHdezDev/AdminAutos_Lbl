@@ -145,14 +145,25 @@ document.addEventListener('DOMContentLoaded', function () {
     // ── 5. NOTIFICACIONES Y ELIMINACIÓN ──────────────────────────────
     if (laravelData) {
         const success = laravelData.dataset.success;
+        const errorGeneral = laravelData.dataset.error;
+        const validationError = laravelData.dataset.validationError; // El mensaje exacto
         const hasErrors = laravelData.dataset.hasErrors === 'true';
 
         if (success) {
-            Swal.fire({ icon: 'success', title: '¡Operación Exitosa!', text: success, timer: 2000, showConfirmButton: false });
+            Swal.fire({ icon: 'success', title: '¡Hecho!', text: success, timer: 2000, showConfirmButton: false });
         }
-        if (hasErrors) {
-            const modal = new bootstrap.Modal(document.getElementById('modalNuevaMarca'));
-            modal.show();
+
+        // Si hay un error de validación (ej: marca duplicada), mostrarlo con prioridad
+        if (validationError) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Validación fallida',
+                text: validationError // Aquí aparecerá "Esta marca ya se encuentra registrada"
+            })
+        }
+        // Si no es de validación pero hay un error general del try-catch
+        else if (errorGeneral) {
+            Swal.fire({ icon: 'error', title: 'Error', text: errorGeneral });
         }
     }
 
