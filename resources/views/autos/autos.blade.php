@@ -201,10 +201,22 @@
                         </tbody>
                         
                     </table>
-                    <div class="d-flex justify-content-center mt-4">
-                            {{ $vehiculos->links() }}
-                    </div>
                 </div>
+                @if($vehiculos->hasPages())
+                        <div class="pagination-wrapper">
+                            <div class="w-100">
+                                @if($vehiculos->total() > 0)
+                                    <div class="pagination-info">
+                                        Mostrando <strong>{{ $vehiculos->firstItem() }}</strong> a <strong>{{ $vehiculos->lastItem() }}</strong>
+                                        de <strong>{{ $vehiculos->total() }}</strong> vehículos
+                                    </div>
+                                @endif
+                                <div class="d-flex justify-content-center">
+                                    {{ $vehiculos->appends(['search' => request('search')])->links('pagination::bootstrap-4') }}
+                                </div>
+                            </div>
+                        </div>
+                @endif
                 @else
                 <div class="empty-state">
                     <div class="empty-icon">
