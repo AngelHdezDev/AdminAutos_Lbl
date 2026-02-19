@@ -27,10 +27,14 @@ class UpdateAutoRequest extends FormRequest
             'id_marca' => 'required|exists:marcas,id_marca',
             'modelo' => 'required|string|max:255',
             'year' => "required|integer|min:1900|max:$yearMax",
+            'color' => 'required|string|max:50',
             'tipo' => 'required|string',
+            'transmision'   => 'required|string',
+            'combustible'   => 'required|string',
             'precio' => 'required|numeric|min:0',
             'kilometraje' => 'required|integer|min:0',
             'imagen' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'descripcion'   => 'nullable|string|max:1000',
         ];
     }
 

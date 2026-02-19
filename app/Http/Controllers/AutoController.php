@@ -15,8 +15,6 @@ class AutoController extends Controller
     public function store(StoreAutoRequest $request)
     {
         try {
-            // Debug: Ver qué datos están llegando
-            \Log::info('Datos recibidos:', $request->all());
 
             $auto = Auto::create([
                 'id_marca' => $request->id_marca,
@@ -121,17 +119,19 @@ class AutoController extends Controller
 
     public function update(UpdateAutoRequest $request, $id)
     {
+
         try {
-            
+           
             $vehiculo = Auto::where('id_auto', $id)->firstOrFail();
 
-            
+
             $data = $request->validated();
+             \Log::info('Datos recibidos:', $data);
 
 
             $data['ocultar_kilometraje'] = $request->has('ocultar_kilometraje') ? 1 : 0;
             $data['consignacion'] = $request->has('consignacion') ? 1 : 0;
-            $data['active'] = $request->has('active') ? 1 : 0; 
+            // $data['active'] = $request->has('active') ? 1 : 0; 
 
             if ($request->hasFile('imagen')) {
                 if ($vehiculo->imagen && file_exists(public_path($vehiculo->imagen))) {
@@ -153,7 +153,7 @@ class AutoController extends Controller
                 ->with('error', 'No se encontró el vehículo para actualizar.');
 
         } catch (Exception $e) {
-           
+
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Ocurrió un error al procesar la actualización: ' . $e->getMessage());

@@ -98,7 +98,7 @@ class MarcaController extends Controller
             $marca = Marca::findOrFail($id);
             $marca->nombre = $request->nombre;
 
-            $marca->active = $request->has('active') ? 1 : 0;
+            // $marca->active = $request->has('active') ? 1 : 0;
 
             if ($request->hasFile('imagen')) {
                 if ($marca->imagen && file_exists(public_path($marca->imagen))) {
