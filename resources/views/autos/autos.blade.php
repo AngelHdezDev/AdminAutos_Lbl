@@ -17,7 +17,7 @@
                     <p class="page-eyebrow">Inventario</p>
                     <h1 class="page-title">Vehículos</h1>
                     <p class="page-subtitle">
-                        {{ $totalVehiculos ?? 0 }} unidades registradas
+                        {{ $vehiculos->total() }} unidades registradas
                         @if(isset($totalConsignacion) && $totalConsignacion > 0)
                             &mdash; {{ $totalConsignacion }} en consignación
                         @endif

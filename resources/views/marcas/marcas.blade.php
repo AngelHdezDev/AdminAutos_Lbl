@@ -15,7 +15,7 @@
                     <p class="page-eyebrow">Catálogo</p>
                     <h1 class="page-title">Marcas</h1>
                     <p class="page-subtitle">
-                        {{ $totalMarcas ?? 0 }} marcas registradas en el sistema
+                       {{ $marcas->total() }} marcas registradas en el sistema
                     </p>
                 </div>
                 <button class="btn-new-marca" data-bs-toggle="modal" data-bs-target="#modalNuevaMarca">
