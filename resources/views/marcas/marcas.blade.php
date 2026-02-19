@@ -64,7 +64,7 @@
                                 <div class="marca-meta">
                                     <div class="marca-stat">
                                         <i class="bi bi-car-front-fill"></i>
-                                        <span>{{ $marca->vehiculos_count ?? 0 }}</span> vehículos
+                                        <span>{{ $marca->autos_count ?? 0 }}</span> vehículos
                                     </div>
                                     <div class="marca-stat">
                                         <i class="bi bi-calendar3"></i>

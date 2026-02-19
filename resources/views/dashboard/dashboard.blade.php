@@ -34,9 +34,9 @@
                     </div>
                     <div class="stat-label">Total Vehículos</div>
                     <div class="stat-value">{{ $totalVehiculos ?? 0 }}</div>
-                    <div class="stat-change positive">
-                        <i class="bi bi-arrow-up"></i>
-                        +{{ $diffVehiculos ?? 0 }}% este mes
+                    <div class="stat-change {{ $diffVehiculos >= 0 ? 'positive' : 'negative' }}">
+                        <i class="bi {{ $diffVehiculos >= 0 ? 'bi-arrow-up' : 'bi-arrow-down' }}"></i>
+                        {{ $diffVehiculos >= 0 ? '+' : '' }}{{ number_format($diffVehiculos, 1) }}% este mes
                     </div>
                 </div>
 
@@ -48,9 +48,9 @@
                     </div>
                     <div class="stat-label">Valor Inventario</div>
                     <div class="stat-value">${{ number_format($valorInventario ?? 0, 0) }}</div>
-                    <div class="stat-change positive">
-                        <i class="bi bi-arrow-up"></i>
-                        +{{ $diffInventario ?? 0 }}% trimestre
+                    <div class="stat-change {{ $diffInventario >= 0 ? 'positive' : 'negative' }}">
+                        <i class="bi {{ $diffInventario >= 0 ? 'bi-arrow-up' : 'bi-arrow-down' }}"></i>
+                        {{ $diffInventario >= 0 ? '+' : '' }}{{ number_format($diffInventario, 1) }}% trimestre
                     </div>
                 </div>
 
@@ -76,9 +76,9 @@
                     </div>
                     <div class="stat-label">Marcas Activas</div>
                     <div class="stat-value">{{ $totalMarcas ?? 0 }}</div>
-                    <div class="stat-change negative">
-                        <i class="bi bi-arrow-down"></i>
-                        -{{ $marcasDescontinuadas ?? 0 }} descontinuadas
+                    <div class="stat-change {{ $marcasDescontinuadas > 0 ? 'negative' : 'positive' }}">
+                        <i class="bi {{ $marcasDescontinuadas > 0 ? 'bi-arrow-down' : 'bi-check-circle' }}"></i>
+                        {{ $marcasDescontinuadas > 0 ? '-' : '' }}{{ $marcasDescontinuadas ?? 0 }} descontinuadas
                     </div>
                 </div>
             </div>
@@ -153,9 +153,9 @@
                                     </div>
                                     <div class="brand-info">
                                         <div class="brand-name">{{ $marca->nombre }}</div>
-                                        <div class="brand-count">{{ $marca->vehiculos_count ?? 0 }} vehículos</div>
+                                        <div class="brand-count">{{ $marca->autos_count ?? 0}} vehículos</div>
                                     </div>
-                                    <div class="brand-value">${{ number_format($marca->valor_inventario ?? 0, 0) }}</div>
+                                    <div class="brand-value">${{ number_format($marca->autos_sum_precio ?? 0, 0) }}</div>
                                 </div>
                             @endforeach
                         @else

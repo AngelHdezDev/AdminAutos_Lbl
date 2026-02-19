@@ -19,17 +19,28 @@ class MarcaController extends Controller
     public function index(Request $request)
     {
         try {
+            
             $query = Marca::query()->where('active', 1);
 
+            $query->withCount([
+                'autos' => function ($query) {
+                    $query->where('active', 1);
+                }
+            ]);
+
+            
             if ($request->has('search') && $request->search != '') {
                 $query->where('nombre', 'LIKE', '%' . $request->search . '%');
             }
 
+            
             $marcas = $query->latest()->paginate(12);
 
             return view('marcas.marcas', compact('marcas'));
+
         } catch (Exception $e) {
-            Log::error("Error al cargar marcas: " . $e->getMessage());
+            \Log::error("Error al cargar marcas: " . $e->getMessage());
+            
             return back()->with('error', 'Error al cargar las marcas.');
         }
     }

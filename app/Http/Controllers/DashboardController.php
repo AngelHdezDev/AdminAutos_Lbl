@@ -11,77 +11,84 @@ class DashboardController extends Controller
     public function getMarcas()
     {
         try {
-            // --- 1. DATOS ACTUALES (Cifras Principales) ---
+            
             $marcas = Marca::orderBy('nombre', 'asc')->get();
             $totalVehiculos = Auto::where('active', true)->count();
             $valorInventario = Auto::where('active', true)->sum('precio');
             $totalConsignacion = Auto::where('consignacion', true)->where('active', true)->count();
             $totalMarcas = Marca::where('active', true)->count();
 
-            // Listados para tablas
-            $vehiculosRecientes = Auto::where('active', true)->orderBy('created_at', 'desc')->limit(5)->get();
-            $marcasTop = Marca::where('active', true)->orderBy('created_at', 'desc')->limit(5)->get();
+            // --- 2. PERIODOS DE TIEMPO ---
+            $inicioMesActual = \Carbon\Carbon::now()->startOfMonth();
+            $inicioMesPasado = \Carbon\Carbon::now()->subMonth()->startOfMonth();
+            $finMesPasado = \Carbon\Carbon::now()->subMonth()->endOfMonth();
+            $inicioTrimestrePasado = \Carbon\Carbon::now()->subMonths(3)->startOfMonth();
 
-            // --- 2. DEFINICIÓN DE TIEMPOS (Carbon) ---
-            $ahora = \Carbon\Carbon::now();
-            $inicioMesActual = $ahora->copy()->startOfMonth();
-            $inicioTrimestre = $ahora->copy()->subMonths(3)->startOfMonth();
+            // --- 3. CÁLCULOS DINÁMICOS ---
 
-            // --- 3. LÓGICA DE INDICADORES (Letras de color) ---
-
-            // A. Total Vehículos: % Este mes (Comparado con el total acumulado)
-            // Como tu base es nueva, si hay vehículos mostramos 100%, si no 0%
-            $diffVehiculos = ($totalVehiculos > 0) ? 100 : 0;
-
-            // B. Valor Inventario: % Trimestre
-            // Calculamos cuánto valía el inventario hace 3 meses
-            $valorPasado = Auto::where('active', true)
-                ->where('created_at', '<', $inicioTrimestre)
-                ->sum('precio');
-
-            if ($valorPasado > 0) {
-                $diffInventario = (($valorInventario - $valorPasado) / $valorPasado) * 100;
-            } else {
-                // Valor por defecto para base de datos nueva (8.5 para que coincida con tu diseño o 100)
-                $diffInventario = ($valorInventario > 0) ? 8.5 : 0;
-            }
-
-            // C. En Consignación: "+X nuevos" (Conteos de esta semana/mes)
-            $consignacionNuevos = Auto::where('consignacion', true)
-                ->where('active', true)
-                ->where('created_at', '>=', $ahora->copy()->subDays(7)) // Últimos 7 días
+            // A. Vehículos: Comparación Mes a Mes
+            $conteoMesPasado = Auto::where('active', true)
+                ->whereBetween('created_at', [$inicioMesPasado, $finMesPasado])
                 ->count();
 
-            // D. Marcas Activas: "-X descontinuadas"
-            // Contamos las que se han desactivado (active = 0) recientemente
+            // Si el mes pasado hubo 0, el crecimiento es 0% (o 100% si prefieres indicar que todo es nuevo)
+            $diffVehiculos = ($conteoMesPasado > 0)
+                ? (($totalVehiculos - $conteoMesPasado) / $conteoMesPasado) * 100
+                : ($totalVehiculos > 0 ? 100 : 0);
+
+            // B. Inventario: Comparación Trimestral
+            $valorTrimestrePasado = Auto::where('active', true)
+                ->where('created_at', '<', $inicioTrimestrePasado)
+                ->sum('precio');
+
+            $diffInventario = ($valorTrimestrePasado > 0)
+                ? (($valorInventario - $valorTrimestrePasado) / $valorTrimestrePasado) * 100
+                : ($valorInventario > 0 ? 100 : 0);
+
+            // C. Consignación: Nuevos en los últimos 7 días
+            $consignacionNuevos = Auto::where('consignacion', true)
+                ->where('active', true)
+                ->where('created_at', '>=', \Carbon\Carbon::now()->subDays(7))
+                ->count();
+
+            // D. Marcas: Desactivadas en el mes en curso
             $marcasDescontinuadas = Marca::where('active', false)
                 ->where('created_at', '>=', $inicioMesActual)
                 ->count();
 
-            // Variable para marcas nuevas (opcional para otro cuadro)
-            $marcasNuevas = Marca::where('active', true)
-                ->where('created_at', '>=', $inicioMesActual)
-                ->count();
+            // --- 4. LISTADOS ---
+            $vehiculosRecientes = Auto::where('active', true)->orderBy('created_at', 'desc')->limit(5)->get();
+            $marcasTop = Marca::where('active', true)
+                ->withCount([
+                    'autos' => function ($query) {
+                        $query->where('active', true);
+                    }
+                ])
+                ->withSum([
+                    'autos' => function ($query) {
+                        $query->where('active', true);
+                    }
+                ], 'precio')
+                ->orderBy('created_at', 'desc')
+                ->limit(5)
+                ->get();
 
-            // --- 4. RETORNO A LA VISTA ---
             return view('dashboard.dashboard', compact(
                 'marcas',
                 'totalVehiculos',
-                'diffVehiculos',      // +100% este mes
+                'diffVehiculos',
                 'valorInventario',
-                'diffInventario',     // +8.5% trimestre
+                'diffInventario',
                 'totalConsignacion',
-                'consignacionNuevos',  // +3 nuevos
+                'consignacionNuevos',
                 'totalMarcas',
-                'marcasDescontinuadas', // -2 descontinuadas
-                'marcasNuevas',
+                'marcasDescontinuadas',
                 'vehiculosRecientes',
                 'marcasTop'
             ));
 
         } catch (\Exception $e) {
-            // Debug para desarrollo
-            dd("Error en el Dashboard: " . $e->getMessage() . " en línea " . $e->getLine());
+            dd("Error técnico en Dashboard: " . $e->getMessage());
         }
     }
 }
