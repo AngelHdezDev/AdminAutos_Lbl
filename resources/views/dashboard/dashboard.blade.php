@@ -134,7 +134,7 @@
                     <div class="card-header">
                         <h2 class="card-title">
                             <i class="bi bi-trophy"></i>
-                            Ultimas Marcas Agregadas
+                            Top Marcas por su valor 
                         </h2>
                         <a href="{{ route('marcas.index') }}" class="card-link">
                             Ver todas →

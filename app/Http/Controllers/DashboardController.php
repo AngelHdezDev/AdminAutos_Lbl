@@ -11,7 +11,7 @@ class DashboardController extends Controller
     public function getMarcas()
     {
         try {
-            
+
             $marcas = Marca::orderBy('nombre', 'asc')->get();
             $totalVehiculos = Auto::where('active', true)->count();
             $valorInventario = Auto::where('active', true)->sum('precio');
@@ -69,7 +69,7 @@ class DashboardController extends Controller
                         $query->where('active', true);
                     }
                 ], 'precio')
-                ->orderBy('created_at', 'desc')
+                ->orderBy('autos_sum_precio', 'desc') // <--- Cambio aquí: Ordenar por dinero total
                 ->limit(5)
                 ->get();
 
