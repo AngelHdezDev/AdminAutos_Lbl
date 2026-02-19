@@ -97,31 +97,67 @@ class AutoController extends Controller
 
     public function destroy($id)
     {
-        // Buscamos específicamente por tu columna de llave primaria id_auto
-        $auto = Auto::where('id_auto', $id)->firstOrFail();
+        try {
 
-        // Actualizamos el estado a inactivo
-        $auto->update(['active' => 0]); // O false, dependiendo de tu DB
+            $auto = Auto::where('id_auto', $id)->firstOrFail();
 
-        return redirect()->route('autos.index')->with('success', 'Vehículo eliminado correctamente');
+
+            $auto->update(['active' => 0]);
+
+
+            return redirect()->route('autos.index')
+                ->with('success', 'El vehículo ' . $auto->modelo . ' ha sido desactivado correctamente.');
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+
+            return redirect()->route('autos.index')
+                ->with('error', 'No se encontró el vehículo que intentas desactivar.');
+
+        } catch (Exception $e) {
+            return redirect()->route('autos.index')
+                ->with('error', 'Ocurrió un fallo al intentar desactivar el vehículo: ' . $e->getMessage());
+        }
     }
 
     public function update(UpdateAutoRequest $request, $id)
     {
-        $vehiculo = Auto::where('id_auto', $id)->firstOrFail();
+        try {
+            
+            $vehiculo = Auto::where('id_auto', $id)->firstOrFail();
+
+            
+            $data = $request->validated();
 
 
-        $data = $request->all();
+            $data['ocultar_kilometraje'] = $request->has('ocultar_kilometraje') ? 1 : 0;
+            $data['consignacion'] = $request->has('consignacion') ? 1 : 0;
+            $data['active'] = $request->has('active') ? 1 : 0; 
 
-        $data['ocultar_kilometraje'] = $request->has('ocultar_kilometraje') ? 1 : 0;
-        $data['consignacion'] = $request->has('consignacion') ? 1 : 0;
+            if ($request->hasFile('imagen')) {
+                if ($vehiculo->imagen && file_exists(public_path($vehiculo->imagen))) {
+                    unlink(public_path($vehiculo->imagen));
+                }
+                $file = $request->file('imagen');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('uploads/autos'), $filename);
+                $data['imagen'] = 'uploads/autos/' . $filename;
+            }
 
+            $vehiculo->update($data);
 
-        $vehiculo->update($data);
+            return redirect()->route('autos.index')
+                ->with('success', 'El vehículo ' . $vehiculo->modelo . ' ha sido actualizado correctamente.');
 
-        // 6. Redirigir con mensaje de éxito
-        return redirect()->route('autos.index')
-            ->with('success', 'El vehículo ' . $vehiculo->modelo . ' ha sido actualizado correctamente.');
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return redirect()->route('autos.index')
+                ->with('error', 'No se encontró el vehículo para actualizar.');
+
+        } catch (Exception $e) {
+           
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Ocurrió un error al procesar la actualización: ' . $e->getMessage());
+        }
     }
 
 }

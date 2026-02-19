@@ -93,30 +93,34 @@ class MarcaController extends Controller
      */
     public function update(UpdateMarcaRequest $request, $id)
     {
-        $marca = Marca::findOrFail($id);
+        try {
 
-        $marca->nombre = $request->nombre;
+            $marca = Marca::findOrFail($id);
+            $marca->nombre = $request->nombre;
 
+            $marca->active = $request->has('active') ? 1 : 0;
 
-        if ($request->hasFile('imagen')) {
+            if ($request->hasFile('imagen')) {
+                if ($marca->imagen && file_exists(public_path($marca->imagen))) {
+                    unlink(public_path($marca->imagen));
+                }
 
-            if ($marca->imagen && file_exists(public_path($marca->imagen))) {
-                unlink(public_path($marca->imagen));
+                $file = $request->file('imagen');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('uploads/marcas'), $filename);
+
+                $marca->imagen = 'uploads/marcas/' . $filename;
             }
+            $marca->save();
 
+            return redirect()->route('marcas.index')
+                ->with('success', 'La marca se ha actualizado correctamente.');
 
-            $file = $request->file('imagen');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/marcas'), $filename);
-
-
-            $marca->imagen = 'uploads/marcas/' . $filename;
+        } catch (Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Error al actualizar la marca: ' . $e->getMessage());
         }
-
-        $marca->save();
-
-        return redirect()->route('marcas.index')
-            ->with('success', 'La marca se ha actualizado correctamente.');
     }
 
     /**
@@ -124,12 +128,23 @@ class MarcaController extends Controller
      */
     public function destroy($id)
     {
-        // Buscamos específicamente por tu columna de llave primaria id_marca
-        $marca = Marca::where('id_marca', $id)->firstOrFail();
+        try {
 
-        // Actualizamos el estado a inactivo
-        $marca->update(['active' => 0]); // O false, dependiendo de tu DB
+            $marca = Marca::where('id_marca', $id)->firstOrFail();
 
-        return redirect()->route('marcas.index')->with('success', 'Marca desactivada correctamente');
+            $marca->update(['active' => 0]);
+
+            return redirect()->route('marcas.index')
+                ->with('success', 'La marca "' . $marca->nombre . '" ha sido desactivada correctamente.');
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+
+            return redirect()->route('marcas.index')
+                ->with('error', 'No se pudo encontrar la marca para desactivar.');
+
+        } catch (Exception $e) {
+            return redirect()->route('marcas.index')
+                ->with('error', 'Ocurrió un error inesperado: ' . $e->getMessage());
+        }
     }
 }
