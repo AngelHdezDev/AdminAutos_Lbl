@@ -15,7 +15,7 @@
 </head>
 <body>
 
-    @include('partials.navbar')
+    <!-- @include('partials.navbar') -->
 
     <main>
         @yield('content') {{-- Aquí se inyectará el contenido de cada página --}}

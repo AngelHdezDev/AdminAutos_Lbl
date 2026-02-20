@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@include('partials.navbar')
+
 @section('title', 'Marcas')
 
 @push('styles')
@@ -84,8 +86,8 @@
                                         data-imagen="{{ $marca->imagen ? asset($marca->imagen) : '' }}">
                                         <i class="bi bi-pencil"></i> Editar
                                     </a>
-                                    <form action="{{ route('marcas.changeStatus', $marca->id_marca) }}" method="POST" class="delete-form"
-                                        style="flex: 1;">
+                                    <form action="{{ route('marcas.changeStatus', $marca->id_marca) }}" method="POST"
+                                        class="delete-form" style="flex: 1;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="button"
@@ -138,8 +140,8 @@
     </div>
 
     <!-- ══════════════════════════════════
-                                                     MODAL — NUEVA MARCA
-                                                ══════════════════════════════════ -->
+                                                         MODAL — NUEVA MARCA
+                                                    ══════════════════════════════════ -->
     <div class="modal fade" id="modalNuevaMarca" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -250,4 +252,3 @@
     <script src="{{ asset('js/marcas.js') }}"></script>
 
 @endsection
-

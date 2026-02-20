@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@include('partials.navbar')
+
 @section('title', 'Dashboard')
 
 @push('styles')
