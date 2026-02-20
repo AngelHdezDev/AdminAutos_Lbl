@@ -134,7 +134,7 @@
                     <div class="card-header">
                         <h2 class="card-title">
                             <i class="bi bi-trophy"></i>
-                            Top Marcas por su valor 
+                            Top Marcas por su valor
                         </h2>
                         <a href="{{ route('marcas.index') }}" class="card-link">
                             Ver todas →
@@ -184,7 +184,7 @@
                         @foreach($actividades as $actividad)
                             <div class="activity-item">
                                 <div class="activity-icon-wrapper">
-                                    <i class="bi bi-{{ $actividad->icono ?? 'circle-fill' }}"></i>
+                                    <i class="{{ $actividad->icono}}"></i>
                                 </div>
                                 <div class="activity-content">
                                     <div class="activity-title">{{ $actividad->titulo }}</div>
@@ -194,51 +194,15 @@
                             </div>
                         @endforeach
                     @else
-                        <div class="activity-item">
-                            <div class="activity-icon-wrapper">
-                                <i class="bi bi-plus-circle"></i>
+                        <div class="empty-state">
+                            <div class="empty-icon">
+                                <i class="bi bi-tag"></i>
                             </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Nuevo vehículo registrado</div>
-                                <div class="activity-desc">Toyota Corolla 2023 · $18,500</div>
-                            </div>
-                            <div class="activity-time">Hace 2h</div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon-wrapper">
-                                <i class="bi bi-camera"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Galería actualizada</div>
-                                <div class="activity-desc">8 imágenes añadidas a Honda Civic</div>
-                            </div>
-                            <div class="activity-time">Hace 5h</div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon-wrapper">
-                                <i class="bi bi-pencil"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Precio actualizado</div>
-                                <div class="activity-desc">Nissan Sentra 2022 · Nuevo precio: $16,200</div>
-                            </div>
-                            <div class="activity-time">Ayer</div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon-wrapper">
-                                <i class="bi bi-bookmark-check"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Consignación aceptada</div>
-                                <div class="activity-desc">Mazda 3 2021 · Comisión: 15%</div>
-                            </div>
-                            <div class="activity-time">Hace 2 días</div>
+                            <p class="empty-text">No hay actividades registradas</p>
                         </div>
                     @endif
                 </div>
             </div>
-
         </div>
     </div>
-
 @endsection

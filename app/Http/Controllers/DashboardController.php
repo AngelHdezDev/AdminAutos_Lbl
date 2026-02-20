@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Marca;
 use App\Models\Auto;
+use App\Models\ActivityLog;
 
 class DashboardController extends Controller
 {
@@ -69,9 +70,11 @@ class DashboardController extends Controller
                         $query->where('active', true);
                     }
                 ], 'precio')
-                ->orderBy('autos_sum_precio', 'desc') // <--- Cambio aquí: Ordenar por dinero total
+                ->orderBy('autos_sum_precio', 'desc') 
                 ->limit(5)
                 ->get();
+
+            $actividades = ActivityLog::orderBy('created_at', 'desc')->limit(10)->get();
 
             return view('dashboard.dashboard', compact(
                 'marcas',
@@ -84,7 +87,8 @@ class DashboardController extends Controller
                 'totalMarcas',
                 'marcasDescontinuadas',
                 'vehiculosRecientes',
-                'marcasTop'
+                'marcasTop',
+                'actividades'
             ));
 
         } catch (\Exception $e) {

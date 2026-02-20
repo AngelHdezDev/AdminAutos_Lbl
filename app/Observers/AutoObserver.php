@@ -16,7 +16,7 @@ class AutoObserver
             'tipo' => 'vehiculo',
             'titulo' => 'Nuevo vehículo registrado',
             'descripcion' => "{$auto->marca->nombre} {$auto->modelo} {$auto->year} • $" . number_format($auto->precio, 2),
-            'icono' => 'bi-plus-circle-fill'
+            'icono' => 'bi bi-car-front-fill'
         ]);
     }
 
