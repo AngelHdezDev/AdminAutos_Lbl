@@ -8,23 +8,23 @@ use App\Http\Controllers\AutoController;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('dashboard');
 });
 
 Route::get('/login', function () {
-    return view('auth.login'); 
+    return view('auth.login');
 })->name('login');
 
 Route::post('/login', [LoginController::class, 'login'])->name('login.authenticate');
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/dashboard', function () {
-    return view('dashboard.dashboard'); 
-})->middleware('auth')->name('dashboard.view');
+Route::get('/dashboard', [DashboardController::class, 'getMarcas'])
+    ->middleware('auth')
+    ->name('dashboard');
 
 Route::post('/marcas', [MarcaController::class, 'store'])->middleware('auth')->name('marcas.store');
-Route::get('/dashboard', [DashboardController::class, 'getMarcas'])->middleware('auth')->name('dashboard');
+// Route::get('/dashboard', [DashboardController::class, 'getMarcas'])->middleware('auth')->name('dashboard');
 
 
 //rutas para autos
