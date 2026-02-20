@@ -170,12 +170,12 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.btn-delete').forEach(btn => {
         btn.addEventListener('click', function () {
             Swal.fire({
-                title: '¿Eliminar marca?',
+                title: '¿Desactivar marca?',
                 text: 'Se perderán las asociaciones con vehículos.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#c0392b',
-                confirmButtonText: 'Sí, eliminar',
+                confirmButtonText: 'Sí, desactivar',
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) this.closest('form').submit();

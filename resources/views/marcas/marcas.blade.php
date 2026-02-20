@@ -84,7 +84,7 @@
                                         @method('DELETE')
                                         <button type="button" class="btn-action-marca delete btn-delete" style="width: 100%;">
                                             <i class="bi bi-trash"></i>
-                                            Eliminar
+                                            Desactivar
                                         </button>
                                     </form>
                                 </div>
