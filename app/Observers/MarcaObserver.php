@@ -16,7 +16,7 @@ class MarcaObserver
             'tipo' => 'marca',
             'titulo' => 'Nueva marca registrada',
             'descripcion' => "Se ha añadido '{$marca->nombre}' al catálogo de marcas.",
-            'icono' => 'bi-patch-check-fill' 
+            'icono' => 'bi-patch-check-fill'
         ]);
     }
 
@@ -25,7 +25,7 @@ class MarcaObserver
      */
     public function updated(Marca $marca): void
     {
-       
+
         if ($marca->isDirty('nombre')) {
             $nombreViejo = $marca->getOriginal('nombre');
             $nombreNuevo = $marca->nombre;
@@ -38,13 +38,22 @@ class MarcaObserver
             ]);
         }
 
-       
+
         if ($marca->isDirty('imagen')) {
             ActivityLog::create([
                 'tipo' => 'marca',
                 'titulo' => 'Logo actualizado',
                 'descripcion' => "Se ha actualizado el logo de la marca '{$marca->nombre}'.",
                 'icono' => 'bi-image'
+            ]);
+        }
+
+        if ($marca->isDirty('active') && $marca->activo == 0) {
+            ActivityLog::create([
+                'tipo' => 'marca',
+                'titulo' => 'Marca desactivada',
+                'descripcion' => "Se ha desactivado la marca '{$marca->nombre}'.",
+                'icono' => 'bi-trash3-fill'
             ]);
         }
     }
@@ -58,7 +67,7 @@ class MarcaObserver
             'tipo' => 'marca',
             'titulo' => 'Marca desactivada',
             'descripcion' => "Se ha desactivado la marca '{$marca->nombre}' y sus registros asociados.",
-            'icono' => 'bi-trash3-fill' 
+            'icono' => 'bi-trash3-fill'
         ]);
     }
 
