@@ -781,3 +781,45 @@ body {
         flex-direction: column;
     }
 }
+
+/* Marca inactiva */
+.marca-card.inactive {
+    opacity: 0.5;
+    filter: grayscale(0.3);
+}
+
+.marca-card.inactive:hover {
+    opacity: 0.7;
+}
+
+.inactive-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.75);
+    color: white;
+    padding: 0.35rem 0.7rem;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(4px);
+}
+
+.inactive-badge i {
+    font-size: 0.75rem;
+}
+
+.btn-action-marca.activate {
+    color: var(--success-color);
+}
+
+.btn-action-marca.activate:hover {
+    border-color: #b8e6c9;
+    background: #f0fdf4;
+    color: #1e7d4a;
+}

@@ -38,4 +38,4 @@ Route::put('/autos/{id}', [AutoController::class, 'update'])->middleware('auth')
 Route::get('/marcas', [MarcaController::class, 'index'])->middleware('auth')->name('marcas.index');
 Route::post('/marcas', [MarcaController::class, 'store'])->middleware('auth')->name('marcas.store');
 Route::put('/marcas/{id}', [MarcaController::class, 'update'])->middleware('auth')->name('marcas.update');
-Route::delete('/marcas/{id}', [MarcaController::class, 'destroy'])->middleware('auth')->name('marcas.destroy');
+Route::delete('/marcas/{id}', [MarcaController::class, 'changeStatus'])->middleware('auth')->name('marcas.changeStatus');

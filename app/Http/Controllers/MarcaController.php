@@ -19,8 +19,8 @@ class MarcaController extends Controller
     public function index(Request $request)
     {
         try {
-            
-            $query = Marca::query()->where('active', 1);
+
+            $query = Marca::query();
 
             $query->withCount([
                 'autos' => function ($query) {
@@ -28,19 +28,19 @@ class MarcaController extends Controller
                 }
             ]);
 
-            
+
             if ($request->has('search') && $request->search != '') {
                 $query->where('nombre', 'LIKE', '%' . $request->search . '%');
             }
 
-            
+
             $marcas = $query->latest()->paginate(12);
 
             return view('marcas.marcas', compact('marcas'));
 
         } catch (Exception $e) {
             \Log::error("Error al cargar marcas: " . $e->getMessage());
-            
+
             return back()->with('error', 'Error al cargar las marcas.');
         }
     }
@@ -137,25 +137,17 @@ class MarcaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function changeStatus($id)
     {
         try {
-
-            $marca = Marca::where('id_marca', $id)->firstOrFail();
-
-            $marca->update(['active' => 0]);
-
-            return redirect()->route('marcas.index')
-                ->with('success', 'La marca "' . $marca->nombre . '" ha sido desactivada correctamente.');
-
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-
-            return redirect()->route('marcas.index')
-                ->with('error', 'No se pudo encontrar la marca para desactivar.');
+            $marca = Marca::findOrFail($id);
+            $marca->active = ($marca->active == 1) ? 0 : 1;
+            $marca->save();
+            $mensaje = $marca->active == 1 ? 'Marca activada correctamente.' : 'Marca desactivada correctamente.';
+            return back()->with('success', $mensaje);
 
         } catch (Exception $e) {
-            return redirect()->route('marcas.index')
-                ->with('error', 'Ocurrió un error inesperado: ' . $e->getMessage());
+            return back()->with('error', 'Ocurrió un error al cambiar el estado: ' . $e->getMessage());
         }
     }
 }

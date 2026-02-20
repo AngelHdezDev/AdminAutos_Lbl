@@ -167,18 +167,37 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    document.querySelectorAll('.btn-delete').forEach(btn => {
+    // ── 5. NOTIFICACIONES Y CAMBIO DE ESTADO ──────────────────────────────
+    // ... (mantén tu lógica de laravelData igual) ...
+
+    document.querySelectorAll('.btn-toggle-status').forEach(btn => {
         btn.addEventListener('click', function () {
+            // Obtenemos los datos dinámicos del botón
+            const nombre = this.getAttribute('data-marca-nombre');
+            const active = this.getAttribute('data-active'); // "1" o "0"
+            const form = this.closest('form');
+
+            // Configuramos el mensaje según el estado actual
+            const esDesactivar = (active == "1");
+            const titulo = esDesactivar ? '¿Desactivar marca?' : '¿Activar marca?';
+            const texto = esDesactivar
+                ? `La marca ${nombre} ya no se mostrará en el catálogo.`
+                : `La marca ${nombre} volverá a estar visible.`;
+            const btnText = esDesactivar ? 'Sí, desactivar' : 'Sí, activar';
+            const btnColor = esDesactivar ? '#c0392b' : '#27ae60';
+
             Swal.fire({
-                title: '¿Desactivar marca?',
-                text: 'Se perderán las asociaciones con vehículos.',
+                title: titulo,
+                text: texto,
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#c0392b',
-                confirmButtonText: 'Sí, desactivar',
+                confirmButtonColor: btnColor,
+                confirmButtonText: btnText,
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
-                if (result.isConfirmed) this.closest('form').submit();
+                if (result.isConfirmed) {
+                    form.submit(); // Dispara el método destroy de tu controlador
+                }
             });
         });
     });

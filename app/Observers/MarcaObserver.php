@@ -48,12 +48,16 @@ class MarcaObserver
             ]);
         }
 
-        if ($marca->isDirty('active') && $marca->activo == 0) {
+        if ($marca->isDirty('active')) {
+            $estado = $marca->active == 1 ? 'activado' : 'desactivado';
+            $titulo = $marca->active == 1 ? 'Marca reactivada' : 'Marca desactivada';
+            $icono = $marca->active == 1 ? 'bi-check-circle-fill' : 'bi-x-circle-fill';
+
             ActivityLog::create([
                 'tipo' => 'marca',
-                'titulo' => 'Marca desactivada',
-                'descripcion' => "Se ha desactivado la marca '{$marca->nombre}'.",
-                'icono' => 'bi-trash3-fill'
+                'titulo' => $titulo,
+                'descripcion' => "Se ha {$estado} la marca '{$marca->nombre}' correctamente.",
+                'icono' => $icono
             ]);
         }
     }
