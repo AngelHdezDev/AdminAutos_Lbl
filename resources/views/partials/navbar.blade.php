@@ -27,7 +27,6 @@
                         <i class="bi bi-tag me-1"></i> Marcas
                     </a>
                 </li>
-                {{-- Agrega los demás links igual --}}
             </ul>
             <div class="d-flex align-items-center gap-2">
                 <a href="#" class="user-pill">
