@@ -75,7 +75,7 @@
                         @endif
 
                         <div class="image-actions">
-                            <button class="btn-image-action" title="Ver imagen" onclick="viewImage('{{ asset('storage/' . $imagen->ruta) }}')">
+                            <button class="btn-image-action" title="Ver imagen" onclick="viewImage('{{ asset('storage/' . $imagen->ruta_archivo) }}')">
                                 <i class="bi bi-eye"></i>
                             </button>
                             <form  class="delete-form d-inline">

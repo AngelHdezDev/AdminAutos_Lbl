@@ -154,9 +154,9 @@
                                 </td>
                                 <td>
                                     <div class="action-buttons" style="justify-content: flex-end;">
-                                        <!-- <a  class="btn-action" title="Ver detalle">
+                                        <a  class="btn-action" title="Ver detalle">
                                             <i class="bi bi-eye"></i>
-                                        </a> -->
+                                        </a>
                                         <a class="btn-action btn-edit" 
                                             title="Editar" 
                                             data-bs-toggle="modal" 
