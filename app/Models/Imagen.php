@@ -15,4 +15,6 @@ class Imagen extends Model
     {
         return $this->belongsTo(Auto::class, 'id_auto');
     }
+
+    public $timestamps = false; 
 }

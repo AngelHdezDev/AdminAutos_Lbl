@@ -27,6 +27,12 @@
                         <i class="bi bi-tag me-1"></i> Marcas
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link-vms {{ request()->routeIs('marcas.*') ? 'active' : '' }}"
+                        href="{{ route('galeria.index') }}">
+                        <i class="bi bi-tag me-1"></i> Galería
+                    </a>
+                </li>
             </ul>
             <div class="d-flex align-items-center gap-2">
                 <a href="#" class="user-pill">

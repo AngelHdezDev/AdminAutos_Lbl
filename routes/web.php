@@ -1,10 +1,12 @@
 <?php
 
+use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\MarcaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AutoController;
+use App\Http\Controllers\GalleryController;
 
 
 Route::get('/', function () {
@@ -39,3 +41,7 @@ Route::get('/marcas', [MarcaController::class, 'index'])->middleware('auth')->na
 Route::post('/marcas', [MarcaController::class, 'store'])->middleware('auth')->name('marcas.store');
 Route::put('/marcas/{id}', [MarcaController::class, 'update'])->middleware('auth')->name('marcas.update');
 Route::delete('/marcas/{id}', [MarcaController::class, 'changeStatus'])->middleware('auth')->name('marcas.changeStatus');
+
+// Ruta para galería
+Route::get('/galeria', [GalleryController::class, 'index'])->middleware('auth')->name('galeria.index');
+Route::post('/admin/asignar-foto/{id}', [GalleryController::class, 'asignar'])->middleware('auth')->name('galeria.asignar');

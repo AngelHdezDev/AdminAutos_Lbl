@@ -11,6 +11,7 @@ class ImagenTemporal extends Model
         'nombre_original',
         'correo_origen',
         'asunto',
-        'fecha_correo'
+        'fecha_correo',
+        'status'
     ];
 }
