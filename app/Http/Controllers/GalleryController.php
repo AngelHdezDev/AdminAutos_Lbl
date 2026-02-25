@@ -29,7 +29,7 @@ class GalleryController extends Controller
             $temp = ImagenTemporal::findOrFail($id);
 
             DB::transaction(function () use ($temp, $request) {
-               
+
                 Imagen::create([
                     'id_auto' => $request->id_auto,
                     'imagen' => $temp->ruta_archivo,
@@ -37,7 +37,7 @@ class GalleryController extends Controller
                     'created_by' => auth()->id() ?? 1
                 ]);
 
-               
+
                 $temp->update(['status' => 1]);
             });
 
@@ -45,6 +45,26 @@ class GalleryController extends Controller
 
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error al asignar: ' . $e->getMessage());
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $temp = \App\Models\ImagenTemporal::findOrFail($id);
+
+            // 1. Verificar y eliminar el archivo físico en storage/app/public/
+            if (Storage::disk('public')->exists($temp->ruta_archivo)) {
+                Storage::disk('public')->delete($temp->ruta_archivo);
+            }
+
+            // 2. Eliminar el registro de la base de datos
+            $temp->delete();
+
+            return redirect()->back()->with('success', 'Imagen eliminada correctamente.');
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error al eliminar: ' . $e->getMessage());
         }
     }
 }

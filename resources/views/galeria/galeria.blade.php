@@ -78,11 +78,12 @@
                             <button class="btn-image-action" title="Ver imagen" onclick="viewImage('{{ asset('storage/' . $imagen->ruta_archivo) }}')">
                                 <i class="bi bi-eye"></i>
                             </button>
-                            <form  class="delete-form d-inline">
+                    
+                            <form action="{{ route('galeria.destroy', $imagen->id) }}" method="POST" class="delete-form">
                                 @csrf
                                 @method('DELETE')
                                 <button type="button" class="btn-image-action delete btn-delete" title="Eliminar">
-                                    <i class="bi bi-trash"></i>
+                                    <i class="bi bi-trash"></i> 
                                 </button>
                             </form>
                         </div>

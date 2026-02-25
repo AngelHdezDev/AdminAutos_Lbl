@@ -45,3 +45,4 @@ Route::delete('/marcas/{id}', [MarcaController::class, 'changeStatus'])->middlew
 // Ruta para galería
 Route::get('/galeria', [GalleryController::class, 'index'])->middleware('auth')->name('galeria.index');
 Route::post('/admin/asignar-foto/{id}', [GalleryController::class, 'asignar'])->middleware('auth')->name('galeria.asignar');
+Route::delete('/admin/eliminar-foto-temporal/{id}', [GalleryController::class, 'destroy'])->name('galeria.destroy');
