@@ -18,7 +18,7 @@ class ExtraerFotosCorreo extends Command
         $client = Client::account('default');
         $client->connect();
 
-        
+
         $folder = $client->getFolder('INBOX');
         $messages = $folder->query()->unseen()->get();
 
@@ -33,10 +33,10 @@ class ExtraerFotosCorreo extends Command
                         $nombreArchivo = Str::uuid() . '_' . $attachment->getName();
                         $rutaFinal = 'inbox_fotos/' . $nombreArchivo;
 
-                        
+
                         Storage::disk('public')->put($rutaFinal, $attachment->getContent());
 
-                        
+
                         ImagenTemporal::create([
                             'ruta_archivo' => $rutaFinal,
                             'nombre_original' => $attachment->getName(),
@@ -47,10 +47,20 @@ class ExtraerFotosCorreo extends Command
                         ]);
 
                         $this->line("Imagen guardada: " . $attachment->getName());
+                    } else {
+                        ImagenTemporal::create([
+                            'ruta_archivo' => "Este formato no es valido: " . $attachment->getName(),
+                            'nombre_original' => $attachment->getName(),
+                            'correo_origen' => $message->getFrom()[0]->mail,
+                            'asunto' => $message->getSubject(),
+                            'fecha_correo' => $message->getDate()[0]->format('Y-m-d H:i:s'),
+                            'status' => 3
+                        ]);
+                        $this->line("Archivo no es valido, se omite: " . $attachment->getName());
                     }
                 }
             }
-           
+
             $message->setFlag('Seen');
         }
 
