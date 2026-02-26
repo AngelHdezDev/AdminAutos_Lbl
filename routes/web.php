@@ -35,6 +35,7 @@ Route::post('/autos', [AutoController::class, 'store'])->middleware('auth')->nam
 Route::delete('/autos/{id}', [AutoController::class, 'destroy'])->middleware('auth')->name('autos.destroy');
 Route::put('/autos/{id}', [AutoController::class, 'update'])->middleware('auth')->name('autos.update');
 Route::get('/autos/details/{id_auto}', [AutoController::class, 'showDetail'])->name('autos.show');
+Route::delete('/autos/imagen/{id}', [AutoController::class, 'eliminarImagen'])->name('autos.imagen.delete');
 
 
 // Ruta para marcas

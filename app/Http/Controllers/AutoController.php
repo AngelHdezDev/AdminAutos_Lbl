@@ -7,6 +7,8 @@ use App\Http\Requests\Auto\StoreAutoRequest;
 use App\Http\Requests\Auto\UpdateAutoRequest;
 use App\Models\Auto;
 use App\Models\Marca;
+use App\Models\Imagen;
+use Illuminate\Support\Facades\Storage;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
@@ -121,12 +123,12 @@ class AutoController extends Controller
     {
 
         try {
-           
+
             $vehiculo = Auto::where('id_auto', $id)->firstOrFail();
 
 
             $data = $request->validated();
-             \Log::info('Datos recibidos:', $data);
+            \Log::info('Datos recibidos:', $data);
 
 
             $data['ocultar_kilometraje'] = $request->has('ocultar_kilometraje') ? 1 : 0;
@@ -167,6 +169,25 @@ class AutoController extends Controller
         $auto = Auto::with(['marca', 'imagenes'])->findOrFail($id_auto);
 
         return view('autos.autosDetail', compact('auto'));
+    }
+
+
+    public function eliminarImagen($id)
+    {
+        try {
+            $imagen = Imagen::findOrFail($id);
+
+            if ($imagen->ruta_imagen && Storage::disk('public')->exists($imagen->ruta_imagen)) {
+                Storage::disk('public')->delete($imagen->ruta_imagen);
+            }
+
+            $imagen->delete();
+
+            return back()->with('success', 'Imagen eliminada correctamente.');
+
+        } catch (Exception $e) {
+            return back()->with('error', 'No se pudo eliminar la imagen: ' . $e->getMessage());
+        }
     }
 
 }

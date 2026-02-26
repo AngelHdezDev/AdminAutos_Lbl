@@ -26,17 +26,17 @@
                 </div>
                 <div class="header-actions">
                     <!-- <a class="btn-header btn-secondary">
-                            <i class="bi bi-pencil"></i>
-                            Editar Vehículo
-                        </a>
-                        <form action="{{ route('autos.destroy', $auto->id_auto) }}" method="POST" class="d-inline delete-form">
-                            @csrf
-                            @method('DELETE')
-                            <button type="button" class="btn-header btn-danger btn-delete">
-                                <i class="bi bi-trash"></i>
-                                Eliminar
-                            </button>
-                        </form> -->
+                                                <i class="bi bi-pencil"></i>
+                                                Editar Vehículo
+                                            </a>
+                                            <form action="{{ route('autos.destroy', $auto->id_auto) }}" method="POST" class="d-inline delete-form">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button" class="btn-header btn-danger btn-delete">
+                                                    <i class="bi bi-trash"></i>
+                                                    Eliminar
+                                                </button>
+                                            </form> -->
                 </div>
             </div>
         </div>
@@ -62,12 +62,24 @@
                                             <i class="bi bi-arrows-fullscreen"></i>
                                         </button>
                                     </div>
-                                    @if($auto->imagenes->count() > 1)
+                                    @if($auto->imagenes->count() > 0)
                                         <div class="gallery-thumbnails">
                                             @foreach($auto->imagenes as $index => $imagen)
                                                 <div class="thumbnail-item {{ $index === 0 ? 'active' : '' }}"
-                                                    onclick="changeImage('{{ asset('storage/' . $imagen->imagen) }}', this)">
-                                                    <img src="{{ asset('storage/' . $imagen->imagen) }}" alt="Imagen {{ $index + 1 }}">
+                                                    data-imagen-id="{{ $imagen->id_imagen }}">
+                                                    <img src="{{ asset('storage/' . $imagen->imagen) }}" alt="Imagen {{ $index + 1 }}"
+                                                        onclick="changeImage('{{ asset('storage/' . $imagen->imagen) }}', this.parentElement)">
+
+                                                    <!-- Botón de eliminar -->
+
+                                                    <form action="{{ route('autos.imagen.delete', $imagen->id_imagen) }}" method="POST"
+                                                        class="delete-image-form">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button" class="btn-delete-thumbnail">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </form>
                                                 </div>
                                             @endforeach
                                         </div>
@@ -292,5 +304,18 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/detalle-vehiculo.js') }}"></script>
+    @if(session('success'))
+        <script>
+            // Usamos DOMContentLoaded para asegurar que SweetAlert ya cargó
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    title: '¡Hecho!',
+                    text: "{{ session('success') }}",
+                    icon: 'success',
+                    confirmButtonColor: '#c0392b' // Rojo para seguir tu estilo
+                });
+            });
+        </script>
+    @endif
 
 @endsection

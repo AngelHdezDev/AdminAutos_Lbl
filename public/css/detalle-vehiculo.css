@@ -516,3 +516,37 @@ body {
         grid-template-columns: repeat(4, 1fr);
     }
 }
+/* Botón de eliminar en thumbnails */
+.thumbnail-item {
+    position: relative;
+}
+
+.btn-delete-thumbnail {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 28px;
+    height: 28px;
+    background: rgba(192, 57, 43, 0.9);
+    backdrop-filter: blur(8px);
+    border: none;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.8rem;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.thumbnail-item:hover .btn-delete-thumbnail {
+    opacity: 1;
+}
+
+.btn-delete-thumbnail:hover {
+    background: rgba(192, 57, 43, 1);
+    transform: scale(1.1);
+}
