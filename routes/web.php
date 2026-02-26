@@ -34,6 +34,7 @@ Route::get('/autos', [AutoController::class, 'index'])->middleware('auth')->name
 Route::post('/autos', [AutoController::class, 'store'])->middleware('auth')->name('autos.store');
 Route::delete('/autos/{id}', [AutoController::class, 'destroy'])->middleware('auth')->name('autos.destroy');
 Route::put('/autos/{id}', [AutoController::class, 'update'])->middleware('auth')->name('autos.update');
+Route::get('/autos/details/{id_auto}', [AutoController::class, 'showDetail'])->name('autos.show');
 
 
 // Ruta para marcas
@@ -46,3 +47,8 @@ Route::delete('/marcas/{id}', [MarcaController::class, 'changeStatus'])->middlew
 Route::get('/galeria', [GalleryController::class, 'index'])->middleware('auth')->name('galeria.index');
 Route::post('/admin/asignar-foto/{id}', [GalleryController::class, 'asignar'])->middleware('auth')->name('galeria.asignar');
 Route::delete('/admin/eliminar-foto-temporal/{id}', [GalleryController::class, 'destroy'])->name('galeria.destroy');
+
+
+Route::get('/auto-detalle', function () {
+    return view('autos.autosDetail');
+})->name('autosDetail');

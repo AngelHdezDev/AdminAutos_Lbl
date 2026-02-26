@@ -160,4 +160,13 @@ class AutoController extends Controller
         }
     }
 
+    public function showDetail($id_auto)
+    {
+        // Buscamos el auto por su llave primaria personalizada
+        // Usamos findOrFail para que si no existe, mande un error 404 automáticamente
+        $auto = Auto::with(['marca', 'imagenes'])->findOrFail($id_auto);
+
+        return view('autos.autosDetail', compact('auto'));
+    }
+
 }

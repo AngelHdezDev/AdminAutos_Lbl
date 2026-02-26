@@ -157,6 +157,9 @@
                                         <a  class="btn-action" title="Ver detalle">
                                             <i class="bi bi-eye"></i>
                                         </a>
+                                        <a href="{{ route('autos.show', $vehiculo->id_auto) }}" class="btn btn-view">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
                                         <a class="btn-action btn-edit" 
                                             title="Editar" 
                                             data-bs-toggle="modal" 
