@@ -1,5 +1,4 @@
 @extends('layouts.app')
-@include('partials.navbar') 
 
 @section('title', 'Galería de Imágenes - VMS')
 
