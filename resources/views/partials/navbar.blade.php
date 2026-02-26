@@ -28,9 +28,9 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link-vms {{ request()->routeIs('marcas.*') ? 'active' : '' }}"
+                    <a class="nav-link-vms {{ request()->routeIs('galeria.*') ? 'active' : '' }}"
                         href="{{ route('galeria.index') }}">
-                        <i class="bi bi-tag me-1"></i> Galería
+                        <i class="bi bi-card-image me-1"></i> Galería
                     </a>
                 </li>
             </ul>

@@ -8,7 +8,6 @@
 @endpush
 
 @section('content')
-
     <!-- ── PAGE HEADER ── -->
     <div class="page-header">
         <div class="container-fluid px-4">
@@ -26,18 +25,18 @@
                     </p>
                 </div>
                 <div class="header-actions">
-                    <a class="btn-header btn-secondary">
-                        <i class="bi bi-pencil"></i>
-                        Editar Vehículo
-                    </a>
-                    <form action="{{ route('autos.destroy', $auto->id_auto) }}" method="POST" class="d-inline delete-form">
-                        @csrf
-                        @method('DELETE')
-                        <button type="button" class="btn-header btn-danger btn-delete">
-                            <i class="bi bi-trash"></i>
-                            Eliminar
-                        </button>
-                    </form>
+                    <!-- <a class="btn-header btn-secondary">
+                            <i class="bi bi-pencil"></i>
+                            Editar Vehículo
+                        </a>
+                        <form action="{{ route('autos.destroy', $auto->id_auto) }}" method="POST" class="d-inline delete-form">
+                            @csrf
+                            @method('DELETE')
+                            <button type="button" class="btn-header btn-danger btn-delete">
+                                <i class="bi bi-trash"></i>
+                                Eliminar
+                            </button>
+                        </form> -->
                 </div>
             </div>
         </div>
