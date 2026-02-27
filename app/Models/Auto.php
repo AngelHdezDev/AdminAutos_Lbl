@@ -10,15 +10,27 @@ class Auto extends Model
     protected $primaryKey = 'id_auto';
 
     protected $fillable = [
-        'id_marca', 'modelo', 'tipo', 'year', 'color', 'kilometraje', 
-        'precio', 'transmision', 'combustible', 'created_at', 'created_by', 
-        'descripcion', 'ocultar_kilometraje', 'consignacion', 'active'
+        'id_marca',
+        'modelo',
+        'tipo',
+        'year',
+        'color',
+        'kilometraje',
+        'precio',
+        'transmision',
+        'combustible',
+        'created_at',
+        'created_by',
+        'descripcion',
+        'ocultar_kilometraje',
+        'consignacion',
+        'active'
     ];
 
     public function scopeActive($query)
     {
         return $query->where('active', true);
-    }   
+    }
 
     public function marca()
     {
@@ -35,5 +47,11 @@ class Auto extends Model
         return $this->belongsTo(Usuario::class, 'created_by');
     }
 
-    public $timestamps = false; 
+    public function thumbnail()
+    {
+        // Le decimos: "Busca en la tabla imagenes una sola fila donde thumbnail sea 1"
+        return $this->hasOne(Imagen::class, 'id_auto')->where('thumbnail', 1);
+    }
+
+    public $timestamps = false;
 }

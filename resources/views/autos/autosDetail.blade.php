@@ -71,7 +71,7 @@
                                                         onclick="changeImage('{{ asset('storage/' . $imagen->imagen) }}', this.parentElement)">
 
                                                     <!-- Badge de portada -->
-                                                    @if($imagen->portada)
+                                                    @if($imagen->thumbnail)
                                                         <span class="badge-portada">
                                                             <i class="bi bi-star-fill"></i>
                                                             Portada
@@ -81,7 +81,7 @@
                                                     <!-- Botones de acción -->
                                                     <div class="thumbnail-actions">
                                                         <!-- Botón marcar como portada -->
-                                                        @if(!$imagen->portada)
+                                                        @if(!$imagen->thumbnail)
                                                             <form action="{{ route('autos.imagen.portada', $imagen->id_imagen) }}" method="POST" class="d-inline">
                                                                 @csrf
                                                                 @method('PATCH')
@@ -90,8 +90,7 @@
                                                                     <i class="bi bi-star"></i>
                                                                 </button>
                                                             </form>
-                                                            
-                                                                                                                    @endif
+                                                        @endif
 
                                                         <!-- Botón eliminar -->
                                                         <form action="{{ route('autos.imagen.delete', $imagen->id_imagen) }}"

@@ -102,11 +102,15 @@
                             @foreach($vehiculosRecientes as $vehiculo)
                                 <div class="vehicle-list-item">
                                     <div class="vehicle-thumb">
-                                        @if($vehiculo->imagenes && $vehiculo->imagenes->count() > 0)
-                                            <img src="{{ asset('storage/' . $vehiculo->imagenes->first()->thumbnail) }}" alt="">
-                                        @else
-                                            <i class="bi bi-car-front"></i>
-                                        @endif
+                                        <div class="vehicle-thumb">
+                                            {{-- Preguntamos por la relación que acabas de crear --}}
+                                            @if($vehiculo->thumbnail)
+                                                <img src="{{ asset('storage/' . $vehiculo->thumbnail->imagen) }}" alt="">
+                                            @else
+                                                {{-- Si el auto no tiene ninguna imagen con thumbnail = 1 --}}
+                                                <i class="bi bi-car-front"></i>
+                                            @endif
+                                        </div>
                                     </div>
                                     <div class="vehicle-info">
                                         <div class="vehicle-name">{{ $vehiculo->marca->nombre ?? '' }} {{ $vehiculo->modelo }}

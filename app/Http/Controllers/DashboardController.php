@@ -58,7 +58,11 @@ class DashboardController extends Controller
                 ->count();
 
             // --- 4. LISTADOS ---
-            $vehiculosRecientes = Auto::where('active', true)->orderBy('created_at', 'desc')->limit(5)->get();
+            $vehiculosRecientes = Auto::with('thumbnail')
+                ->where('active', true)
+                ->orderBy('created_at', 'desc')
+                ->limit(5)
+                ->get();
             $marcasTop = Marca::where('active', true)
                 ->withCount([
                     'autos' => function ($query) {
@@ -70,7 +74,7 @@ class DashboardController extends Controller
                         $query->where('active', true);
                     }
                 ], 'precio')
-                ->orderBy('autos_sum_precio', 'desc') 
+                ->orderBy('autos_sum_precio', 'desc')
                 ->limit(5)
                 ->get();
 
