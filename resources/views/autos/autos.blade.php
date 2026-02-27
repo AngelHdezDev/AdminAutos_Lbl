@@ -110,9 +110,11 @@
                                 <td>
                                     <div class="vehicle-cell">
                                         <div class="vehicle-thumb">
-                                            @if($vehiculo->imagenes && $vehiculo->imagenes->count() > 0)
-                                                <img src="{{ asset('storage/' . $vehiculo->imagenes->first()->thumbnail) }}" alt="">
+                                            @if($vehiculo->thumbnail)
+                                                
+                                                <img src="{{ asset('storage/' . $vehiculo->thumbnail->imagen) }}" alt="{{ $vehiculo->modelo }}">
                                             @else
+                                                
                                                 <i class="bi bi-car-front"></i>
                                             @endif
                                         </div>

@@ -56,7 +56,7 @@ class AutoController extends Controller
 
     public function index(Request $request)
     {
-        $query = Auto::with('marca')->active();
+        $query = Auto::with(['marca', 'thumbnail'])->active();
 
         if ($request->filled('search')) {
             $search = $request->input('search');
