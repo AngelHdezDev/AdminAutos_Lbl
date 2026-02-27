@@ -32,7 +32,7 @@
     <div class="filters-bar">
         <div class="container-fluid px-4">
             <div class="filters-inner">
-                <select class="filter-select" id="filterVehiculo">
+                <!-- <select class="filter-select" id="filterVehiculo">
                     <option value="">Todos los vehículos</option>
                     <option value="sin-asignar">Sin asignar</option>
                     @foreach($vehiculos ?? [] as $vehiculo)
@@ -40,7 +40,7 @@
                             {{ $vehiculo->marca->nombre ?? '' }} {{ $vehiculo->modelo }} {{ $vehiculo->year }}
                         </option>
                     @endforeach
-                </select>
+                </select> -->
                 <span class="filters-count">
                     Mostrando <span id="countVisible">{{ count($imagenes ?? []) }}</span> imágenes
                 </span>
