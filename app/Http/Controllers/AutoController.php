@@ -89,7 +89,9 @@ class AutoController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        $marcas = Marca::orderBy('nombre', 'asc')->get();
+        $marcas = Marca::where('active', 1)
+            ->orderBy('nombre', 'asc')
+            ->get();
         $tipos = Auto::select('tipo')->distinct()->orderBy('tipo', 'asc')->get();
 
         return view('autos.autos', compact('vehiculos', 'marcas', 'tipos'));
