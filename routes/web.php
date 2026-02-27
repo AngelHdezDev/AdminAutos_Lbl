@@ -34,8 +34,9 @@ Route::get('/autos', [AutoController::class, 'index'])->middleware('auth')->name
 Route::post('/autos', [AutoController::class, 'store'])->middleware('auth')->name('autos.store');
 Route::delete('/autos/{id}', [AutoController::class, 'destroy'])->middleware('auth')->name('autos.destroy');
 Route::put('/autos/{id}', [AutoController::class, 'update'])->middleware('auth')->name('autos.update');
-Route::get('/autos/details/{id_auto}', [AutoController::class, 'showDetail'])->name('autos.show');
-Route::delete('/autos/imagen/{id}', [AutoController::class, 'eliminarImagen'])->name('autos.imagen.delete');
+Route::get('/autos/details/{id_auto}', [AutoController::class, 'showDetail'])->middleware('auth')->name('autos.show');
+Route::delete('/autos/imagen/{id}', [AutoController::class, 'eliminarImagen'])->middleware('auth')->name('autos.imagen.delete');
+Route::patch('/autos/imagen/{id}/portada', [GalleryController::class, 'setPortada'])->name('autos.imagen.portada');
 
 
 // Ruta para marcas
@@ -47,9 +48,4 @@ Route::delete('/marcas/{id}', [MarcaController::class, 'changeStatus'])->middlew
 // Ruta para galería
 Route::get('/galeria', [GalleryController::class, 'index'])->middleware('auth')->name('galeria.index');
 Route::post('/admin/asignar-foto/{id}', [GalleryController::class, 'asignar'])->middleware('auth')->name('galeria.asignar');
-Route::delete('/admin/eliminar-foto-temporal/{id}', [GalleryController::class, 'destroy'])->name('galeria.destroy');
-
-
-Route::get('/auto-detalle', function () {
-    return view('autos.autosDetail');
-})->name('autosDetail');
+Route::delete('/admin/eliminar-foto-temporal/{id}', [GalleryController::class, 'destroy'])->middleware('auth')->name('galeria.destroy');

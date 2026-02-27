@@ -143,6 +143,30 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/galeria.js') }}"></script>
+    @if(session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    title: '¡Hecho!',
+                    text: "{{ session('success') }}",
+                    icon: 'success',
+                    confirmButtonColor: '#c0392b'
+                });
+            });
+        </script>
+    @endif
+    @if(session('error'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    title: 'Hubo un problema',
+                    text: "{{ session('error') }}",
+                    icon: 'error',
+                    confirmButtonColor: '#c0392b'
+                });
+            });
+        </script>
+    @endif
 
 @endsection
 

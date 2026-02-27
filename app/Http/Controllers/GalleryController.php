@@ -56,13 +56,28 @@ class GalleryController extends Controller
             if (Storage::disk('public')->exists($temp->ruta_archivo)) {
                 Storage::disk('public')->delete($temp->ruta_archivo);
             }
-            
+
             $temp->delete();
 
             return redirect()->back()->with('success', 'Imagen eliminada correctamente.');
 
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error al eliminar: ' . $e->getMessage());
+        }
+    }
+    public function setPortada($id)
+    {
+        try {
+            $imagen = Imagen::findOrFail($id);
+
+            Imagen::where('id_auto', $imagen->id_auto)
+                ->update(['thumbnail' => false]);
+
+            $imagen->update(['thumbnail' => true]);
+
+            return back()->with('success', 'Portada actualizada correctamente.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'No se pudo actualizar la portada.');
         }
     }
 }

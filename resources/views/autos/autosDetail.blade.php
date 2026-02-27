@@ -26,17 +26,17 @@
                 </div>
                 <div class="header-actions">
                     <!-- <a class="btn-header btn-secondary">
-                                                <i class="bi bi-pencil"></i>
-                                                Editar Vehículo
-                                            </a>
-                                            <form action="{{ route('autos.destroy', $auto->id_auto) }}" method="POST" class="d-inline delete-form">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" class="btn-header btn-danger btn-delete">
-                                                    <i class="bi bi-trash"></i>
-                                                    Eliminar
-                                                </button>
-                                            </form> -->
+                                                    <i class="bi bi-pencil"></i>
+                                                    Editar Vehículo
+                                                </a>
+                                                <form action="{{ route('autos.destroy', $auto->id_auto) }}" method="POST" class="d-inline delete-form">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button" class="btn-header btn-danger btn-delete">
+                                                        <i class="bi bi-trash"></i>
+                                                        Eliminar
+                                                    </button>
+                                                </form> -->
                 </div>
             </div>
         </div>
@@ -70,16 +70,39 @@
                                                     <img src="{{ asset('storage/' . $imagen->imagen) }}" alt="Imagen {{ $index + 1 }}"
                                                         onclick="changeImage('{{ asset('storage/' . $imagen->imagen) }}', this.parentElement)">
 
-                                                    <!-- Botón de eliminar -->
+                                                    <!-- Badge de portada -->
+                                                    @if($imagen->portada)
+                                                        <span class="badge-portada">
+                                                            <i class="bi bi-star-fill"></i>
+                                                            Portada
+                                                        </span>
+                                                    @endif
 
-                                                    <form action="{{ route('autos.imagen.delete', $imagen->id_imagen) }}" method="POST"
-                                                        class="delete-image-form">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="button" class="btn-delete-thumbnail">
-                                                            <i class="bi bi-trash"></i>
-                                                        </button>
-                                                    </form>
+                                                    <!-- Botones de acción -->
+                                                    <div class="thumbnail-actions">
+                                                        <!-- Botón marcar como portada -->
+                                                        @if(!$imagen->portada)
+                                                            <form action="{{ route('autos.imagen.portada', $imagen->id_imagen) }}" method="POST" class="d-inline">
+                                                                @csrf
+                                                                @method('PATCH')
+                                                                <button type="submit" class="btn-portada-thumbnail"
+                                                                    title="Marcar como portada">
+                                                                    <i class="bi bi-star"></i>
+                                                                </button>
+                                                            </form>
+                                                            
+                                                                                                                    @endif
+
+                                                        <!-- Botón eliminar -->
+                                                        <form action="{{ route('autos.imagen.delete', $imagen->id_imagen) }}"
+                                                            method="POST" class="delete-image-form">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="button" class="btn-delete-thumbnail" title="Eliminar imagen">
+                                                                <i class="bi bi-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
                                                 </div>
                                             @endforeach
                                         </div>
@@ -306,13 +329,24 @@
     <script src="{{ asset('js/detalle-vehiculo.js') }}"></script>
     @if(session('success'))
         <script>
-            // Usamos DOMContentLoaded para asegurar que SweetAlert ya cargó
             document.addEventListener('DOMContentLoaded', function () {
                 Swal.fire({
                     title: '¡Hecho!',
                     text: "{{ session('success') }}",
                     icon: 'success',
-                    confirmButtonColor: '#c0392b' // Rojo para seguir tu estilo
+                    confirmButtonColor: '#c0392b'
+                });
+            });
+        </script>
+    @endif
+    @if(session('error'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    title: 'Hubo un problema',
+                    text: "{{ session('error') }}",
+                    icon: 'error',
+                    confirmButtonColor: '#c0392b'
                 });
             });
         </script>
