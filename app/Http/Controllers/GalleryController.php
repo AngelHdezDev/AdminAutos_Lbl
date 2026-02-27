@@ -13,7 +13,9 @@ class GalleryController extends Controller
 {
     public function index()
     {
-        $imagenes = ImagenTemporal::orderBy('created_at', 'desc')->where('status', 0)->get();
+        $imagenes = ImagenTemporal::where('status', 0)
+            ->orderBy('created_at', 'desc')
+            ->paginate(12);
         $vehiculos = Auto::where('active', 1)->get();
 
         return view('galeria.galeria', compact('imagenes', 'vehiculos'));

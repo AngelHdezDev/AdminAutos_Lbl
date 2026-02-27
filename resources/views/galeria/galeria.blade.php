@@ -15,15 +15,15 @@
                     <p class="page-eyebrow">Multimedia</p>
                     <h1 class="page-title">Galería de Imágenes</h1>
                     <p class="page-subtitle">
-                        {{ $totalImagenes ?? 0 }} imágenes en total · 
-                        {{ $imagenesAsignadas ?? 0 }} asignadas · 
-                        {{ $imagenesSinAsignar ?? 0 }} sin asignar
+                        <!-- {{  $imagenes->total() }} imágenes en total · 
+                        {{ $imagenesAsignadas ?? 0 }} asignadas ·  -->
+                        {{  $imagenes->total()}} imagenes sin asignar
                     </p>
                 </div>
-                <button class="btn-upload" data-bs-toggle="modal" data-bs-target="#modalUpload">
+                <!-- <button class="btn-upload" data-bs-toggle="modal" data-bs-target="#modalUpload">
                     <i class="bi bi-cloud-arrow-up"></i>
                     Subir Imágenes
-                </button>
+                </button> -->
             </div>
         </div>
     </div>
@@ -132,13 +132,30 @@
                 </div>
                 <div class="empty-title">Sin imágenes en la galería</div>
                 <p class="empty-text">Sube las primeras imágenes para comenzar.</p>
-                <button class="btn-upload mx-auto" data-bs-toggle="modal" data-bs-target="#modalUpload">
+                <!-- <button class="btn-upload mx-auto" data-bs-toggle="modal" data-bs-target="#modalUpload">
                     <i class="bi bi-cloud-arrow-up"></i> Subir Imágenes
-                </button>
+                </button> -->
             </div>
             @endif
 
         </div>
+        @if($imagenes->hasPages() || $imagenes->total() > 0)
+            <div class="pagination-wrapper">
+                <div class="w-100">
+                    @if($imagenes->total() > 0)
+                        <div class="pagination-info">
+                            Mostrando <strong>{{ $imagenes->firstItem() }}</strong> a <strong>{{ $imagenes->lastItem() }}</strong> 
+                            de <strong>{{ $imagenes->total() }}</strong> imágenes 
+                        </div>
+                    @endif
+                    
+                    <div class="d-flex justify-content-center">
+                        {{-- Mantenemos la consistencia con bootstrap-4 como en tu ejemplo --}}
+                        {{ $imagenes->appends(request()->query())->links('pagination::bootstrap-4') }}
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
