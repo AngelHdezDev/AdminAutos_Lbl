@@ -23,7 +23,7 @@ class ExtraerFotosCorreo extends Command
 
         $this->info("Procesando " . $messages->count() . " correos nuevos...");
 
-        // 1. Definimos las extensiones que sí permitimos
+
         $extensionesPermitidas = ['jpg', 'jpeg', 'png'];
 
         foreach ($messages as $message) {
@@ -33,8 +33,7 @@ class ExtraerFotosCorreo extends Command
                     $nombreOriginal = $attachment->getName();
                     $extension = strtolower(pathinfo($nombreOriginal, PATHINFO_EXTENSION));
 
-                    // 2. Primero verificamos si es imagen por MimeType
-                    // 3. Y LUEGO verificamos si la extensión está en nuestra lista permitida
+
                     if (str_contains($attachment->getMimeType(), 'image') && in_array($extension, $extensionesPermitidas)) {
 
                         $nombreArchivo = Str::uuid() . '_' . $nombreOriginal;
@@ -53,7 +52,7 @@ class ExtraerFotosCorreo extends Command
 
                         $this->line("Imagen guardada correctamente: " . $nombreOriginal);
                     } else {
-                        // Cae aquí si no es imagen O si es una imagen con extensión prohibida (ej. .webp)
+
                         ImagenTemporal::create([
                             'ruta_archivo' => "Este formato no es valido: " . $nombreOriginal,
                             'nombre_original' => $nombreOriginal,
@@ -63,6 +62,10 @@ class ExtraerFotosCorreo extends Command
                             'status' => 3
                         ]);
                         $this->warn("Archivo omitido (Formato no permitido): " . $nombreOriginal);
+                        \App\Jobs\SendInvalidFormatEmail::dispatch(
+                            $message->getFrom()[0]->mail,
+                            $nombreOriginal
+                        );
                     }
                 }
             }
