@@ -7,7 +7,7 @@ use Webklex\IMAP\Facades\Client;
 use App\Models\ImagenTemporal;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-
+use App\Jobs\SendInvalidFormatEmail;
 class ExtraerFotosCorreo extends Command
 {
     protected $signature = 'app:extraer-fotos';
@@ -62,7 +62,7 @@ class ExtraerFotosCorreo extends Command
                             'status' => 3
                         ]);
                         $this->warn("Archivo omitido (Formato no permitido): " . $nombreOriginal);
-                        \App\Jobs\SendInvalidFormatEmail::dispatch(
+                        SendInvalidFormatEmail::dispatch(
                             $message->getFrom()[0]->mail,
                             $nombreOriginal
                         );
