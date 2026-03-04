@@ -150,7 +150,7 @@
                                 <div class="brand-list-item">
                                     <div class="brand-logo-small">
                                         @if($marca->imagen)
-                                            <img src="{{ asset($marca->imagen) }}" alt="{{ $marca->nombre }}">
+                                            <img src="{{ asset('storage/' . $marca->imagen) }}" width="50">
                                         @else
                                             {{ strtoupper(substr($marca->nombre, 0, 1)) }}
                                         @endif

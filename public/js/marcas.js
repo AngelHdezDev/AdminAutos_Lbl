@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (tipo === 'editar') {
                 const id = button.getAttribute('data-id');
                 const nombre = button.getAttribute('data-nombre');
-                const imagenUrl = button.getAttribute('data-imagen');
+                const imagenUrl =button.getAttribute('data-imagen');
 
                 modalTitle.textContent = 'Editar Marca';
                 btnSubmit.innerHTML = '<i class="bi bi-check-lg"></i> Actualizar Marca';
@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 fileInput.required = false; // Al editar, la imagen es opcional
 
                 if (imagenUrl) {
+                    console.log("Imagen URL:", imagenUrl);
                     uploadPreviewImage.src = imagenUrl;
                     uploadInitialState.style.display = 'none';
                     uploadPreviewState.style.display = 'block';

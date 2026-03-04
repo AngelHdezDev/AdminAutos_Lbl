@@ -60,11 +60,10 @@ class MarcaController extends Controller
     {
         try {
             $rutaBaseDatos = null;
+
             if ($request->hasFile('imagen')) {
-                $file = $request->file('imagen');
-                $nombreImagen = time() . '_' . $file->getClientOriginalName();
-                $file->move(public_path('uploads/marcas'), $nombreImagen);
-                $rutaBaseDatos = 'uploads/marcas/' . $nombreImagen;
+                $path = $request->file('imagen')->store('marcas', 'public');
+                $rutaBaseDatos = $path;
             }
 
             Marca::create([
@@ -79,7 +78,7 @@ class MarcaController extends Controller
             Log::error("Error al guardar marca: " . $e->getMessage());
             return back()
                 ->withInput()
-                ->with('error', 'Ocurrió un error inesperado al guardar la marca. Por favor, intente de nuevo.');
+                ->with('error', 'Error al guardar la marca.');
         }
     }
 
@@ -105,32 +104,34 @@ class MarcaController extends Controller
     public function update(UpdateMarcaRequest $request, $id)
     {
         try {
-
             $marca = Marca::findOrFail($id);
             $marca->nombre = $request->nombre;
 
-            // $marca->active = $request->has('active') ? 1 : 0;
-
+            // Si el usuario sube una nueva imagen
             if ($request->hasFile('imagen')) {
-                if ($marca->imagen && file_exists(public_path($marca->imagen))) {
-                    unlink(public_path($marca->imagen));
+
+                // 1. Borrar la imagen anterior si existe en el disco public
+                if ($marca->imagen && \Storage::disk('public')->exists($marca->imagen)) {
+                    \Storage::disk('public')->delete($marca->imagen);
                 }
 
-                $file = $request->file('imagen');
-                $filename = time() . '_' . $file->getClientOriginalName();
-                $file->move(public_path('uploads/marcas'), $filename);
+                // 2. Guardar la nueva imagen en 'storage/app/public/marcas'
+                $path = $request->file('imagen')->store('marcas', 'public');
 
-                $marca->imagen = 'uploads/marcas/' . $filename;
+                // 3. Actualizar la ruta en la base de datos (guardará 'marcas/nombre.jpg')
+                $marca->imagen = $path;
             }
+
             $marca->save();
 
             return redirect()->route('marcas.index')
                 ->with('success', 'La marca se ha actualizado correctamente.');
 
         } catch (Exception $e) {
+            \Log::error("Error al actualizar marca: " . $e->getMessage());
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Error al actualizar la marca: ' . $e->getMessage());
+                ->with('error', 'Error al actualizar la marca.');
         }
     }
 

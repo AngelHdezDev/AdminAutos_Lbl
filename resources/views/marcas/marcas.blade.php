@@ -55,7 +55,7 @@
                             data-nombre="{{ strtolower($marca->nombre) }}">
                             <div class="marca-logo-container">
                                 @if($marca->imagen)
-                                    <img src="{{ asset($marca->imagen) }}" alt="{{ $marca->nombre }}">
+                                    <img src="{{ asset('storage/' . $marca->imagen) }}" width="50">
                                 @else
                                     <i class="bi bi-tag-fill marca-logo-placeholder"></i>
                                 @endif
@@ -81,7 +81,7 @@
                                 <div class="marca-actions">
                                     <a class="btn-action-marca" data-bs-toggle="modal" data-bs-target="#modalNuevaMarca"
                                         data-tipo="editar" data-id="{{ $marca->id_marca }}" data-nombre="{{ $marca->nombre }}"
-                                        data-imagen="{{ $marca->imagen ? asset($marca->imagen) : '' }}">
+                                        data-imagen="{{ $marca->imagen ? asset('storage/' . $marca->imagen) : '' }}">
                                         <i class="bi bi-pencil"></i> Editar
                                     </a>
                                     <form action="{{ route('marcas.changeStatus', $marca->id_marca) }}" method="POST"
